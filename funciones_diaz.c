@@ -1,5 +1,6 @@
 #include "funciones_diaz.h"
 #include "estructuras.h"
+#include "compartidas.h"
 
 void pixelNegativo(char *argv[])
 {
@@ -8,9 +9,7 @@ void pixelNegativo(char *argv[])
 
     char direccion[256];
 
-    const char *subcarpeta = "tests";
-
-    snprintf(direccion, sizeof(direccion), "%s/%s", subcarpeta, argv[POS_ARCHIVO]);
+    direccion = crearDireccion(argv[POS_ARCHIVO]);
 
     printf("Intentando abrir: %s\n", direccion);
 

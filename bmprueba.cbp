@@ -31,6 +31,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="compartidas.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="compartidas.h" />
 		<Unit filename="estructuras.h" />
 		<Unit filename="funciones_diaz.c">
 			<Option compilerVar="CC" />

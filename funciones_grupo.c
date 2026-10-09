@@ -1,10 +1,10 @@
 /*
-    Integrantes del grupo. En caso de ser un grupo de dos integrantes, no completar el último campo.
+    Integrantes del grupo. En caso de ser un grupo de dos integrantes, no completar el ï¿½ltimo campo.
     Si alguno de los integrantes del grupo dejara la materia, completar de todos modos sus datos, aclarando que no entrega.
     -----------------
-    Apellido:
-    Nombre:
-    DNI:
+    Apellido: Diaz
+    Nombre: Juan Pablo
+    DNI: 44871263
     Entrega:
     -----------------
     Apellido:
@@ -30,7 +30,7 @@
 int solucion(int argc, char* argv[])
 {
     /*
-        Aquí deben hacer el código que solucione lo solicitado.
+        Aquï¿½ deben hacer el cï¿½digo que solucione lo solicitado.
 	*/
 
     //Validar argumentos minimos: bmpmanipuleitor.exe <funcionalidad> <archivo origen>

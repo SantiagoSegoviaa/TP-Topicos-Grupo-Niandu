@@ -6,7 +6,15 @@ void pixelNegativo(char *argv[])
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
 
-    archivo_viejo = fopen(argv[POS_ARCHIVO], "rb");
+    char direccion[256];
+
+    const char *subcarpeta = "tests";
+
+    snprintf(direccion, sizeof(direccion), "%s/%s", subcarpeta, argv[POS_ARCHIVO]);
+
+    printf("Intentando abrir: %s\n", direccion);
+
+    archivo_viejo = fopen(direccion, "rb");
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");

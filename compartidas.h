@@ -7,6 +7,5 @@
 
 #define SUBCARPETA "tests"
 
-char crearDireccion(char nombre_archivo);
 
 #endif // COMPARTIDAS_H_INCLUDED

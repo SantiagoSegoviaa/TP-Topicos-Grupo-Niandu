@@ -1,4 +1,7 @@
 *.exe
 *.o
 *.bmp
+*.depend
+*.layout
+
 !tests/*.bmp

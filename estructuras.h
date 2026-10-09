@@ -1,9 +1,14 @@
 #ifndef ESTRUCTURAS_H_INCLUDED
 #define ESTRUCTURAS_H_INCLUDED
+
+#define NOMBRE_GRUPO "PALETA_"
+
 // Estructura sugerida, su uso es opcional.
 typedef struct
 {
-    unsigned char pixel[3];
+    unsigned char b;
+    unsigned char g;
+    unsigned char r;
 }t_pixel;
 
 typedef struct
@@ -14,4 +19,6 @@ typedef struct
     unsigned int alto;
     unsigned short profundidad;
 }t_metadata;
+
+
 #endif // ESTRUCTURAS_H_INCLUDED

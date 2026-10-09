@@ -8,10 +8,7 @@ void pixelNegativo(char *argv[])
     FILE *archivo_nuevo;
 
     char direccion[256];
-
-    direccion = crearDireccion(argv[POS_ARCHIVO]);
-
-    printf("Intentando abrir: %s\n", direccion);
+    snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, argv[POS_ARCHIVO]);
 
     archivo_viejo = fopen(direccion, "rb");
     if(archivo_viejo == NULL)
@@ -161,7 +158,10 @@ void pixelGrises(char *argv[])
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
 
-    archivo_viejo = fopen(argv[POS_ARCHIVO], "rb");
+    char direccion[256];
+    snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, argv[POS_ARCHIVO]);
+
+    archivo_viejo = fopen(direccion, "rb");
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
@@ -315,10 +315,13 @@ void pixelEspHoriz(char* argv[])
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
 
-    archivo_viejo = fopen(argv[POS_ARCHIVO], "rb");
+    char direccion[256];
+    snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, argv[POS_ARCHIVO]);
+
+    archivo_viejo = fopen(direccion, "rb");
     if(archivo_viejo == NULL)
     {
-        perror("No se pudo abrir el archivo correctamente.\n");
+        perror("No se pudo abrir el archivo correctamente.");
         return;
     }
 
@@ -465,7 +468,10 @@ void pixelEspVert(char* argv[])
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
 
-    archivo_viejo = fopen(argv[POS_ARCHIVO], "rb");
+    char direccion[256];
+    snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, argv[POS_ARCHIVO]);
+
+    archivo_viejo = fopen(direccion, "rb");
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
@@ -614,7 +620,10 @@ void pixelMasContrast(char *argv[], int valor)
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
 
-    archivo_viejo = fopen(argv[POS_ARCHIVO], "rb");
+    char direccion[256];
+    snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, argv[POS_ARCHIVO]);
+
+    archivo_viejo = fopen(direccion, "rb");
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
@@ -767,7 +776,10 @@ void pixelMenosContrast(char* argv[], int valor)
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
 
-    archivo_viejo = fopen(argv[POS_ARCHIVO], "rb");
+    char direccion[256];
+    snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, argv[POS_ARCHIVO]);
+
+    archivo_viejo = fopen(direccion, "rb");
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
@@ -932,7 +944,10 @@ void pixelTonRojo(char *argv[], int valor)
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
 
-    archivo_viejo = fopen(argv[POS_ARCHIVO], "rb");
+    char direccion[256];
+    snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, argv[POS_ARCHIVO]);
+
+    archivo_viejo = fopen(direccion, "rb");
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
@@ -1089,7 +1104,10 @@ void pixelTonAzul(char *argv[], int valor)
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
 
-    archivo_viejo = fopen(argv[POS_ARCHIVO], "rb");
+    char direccion[256];
+    snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, argv[POS_ARCHIVO]);
+
+    archivo_viejo = fopen(direccion, "rb");
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
@@ -1246,7 +1264,10 @@ void pixelTonVerde(char *argv[], int valor)
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
 
-    archivo_viejo = fopen(argv[POS_ARCHIVO], "rb");
+    char direccion[256];
+    snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, argv[POS_ARCHIVO]);
+
+    archivo_viejo = fopen(direccion, "rb");
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
@@ -1349,6 +1370,9 @@ void pixelTonVerde(char *argv[], int valor)
 
     sprintf(num_buff, "%d", valor);
 
+    char direccion[256];
+    snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, argv[POS_ARCHIVO]);
+
     strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
     strcat(nombre_archivo_nuevo, "tonalidad-verde=");
     strcat(nombre_archivo_nuevo, num_buff);
@@ -1403,7 +1427,10 @@ void pixelRecortar(char *argv[], int valor)
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
 
-    archivo_viejo = fopen(argv[POS_ARCHIVO], "rb");
+    char direccion[256];
+    snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, argv[POS_ARCHIVO]);
+
+    archivo_viejo = fopen(direccion, "rb");
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");

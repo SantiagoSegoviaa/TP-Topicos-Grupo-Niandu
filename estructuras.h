@@ -13,12 +13,19 @@ typedef struct
 
 typedef struct
 {
-    unsigned int tamArchivo;
+    int tamArchivo;
     unsigned int tamEncabezado;
-    unsigned int ancho;
-    unsigned int alto;
+    unsigned char *encabezado;
+    int ancho;
+    int alto;
     unsigned short profundidad;
 }t_metadata;
+
+typedef struct
+{
+    t_metadata metadata;
+    t_pixel **pixeles;
+}t_imagen;
 
 
 #endif // ESTRUCTURAS_H_INCLUDED

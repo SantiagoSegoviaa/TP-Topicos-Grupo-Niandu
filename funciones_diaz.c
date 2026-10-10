@@ -1,155 +1,49 @@
 #include "funciones_diaz.h"
-#include "estructuras.h"
-#include "compartidas.h"
 
 void pixelNegativo(char *argv[])
 {
-    FILE *archivo_viejo;
-    FILE *archivo_nuevo;
+    t_imagen img;
 
-    char direccion[256];
-    snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, argv[POS_ARCHIVO]);
-
-    archivo_viejo = fopen(direccion, "rb");
-    if(archivo_viejo == NULL)
+    if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0) //Devuelve 0 si cargo la imagen correctamente, sino devuelve cualquier otro numero.
     {
-        perror("No se pudo abrir el archivo correctamente.\n");
         return;
-    }
-
-    int ancho, alto, offset_datos;
-
-    //Los bytes 18-21 tienen el ancho y los bytes 22-25 tienen el alto
-    fseek(archivo_viejo, 18, SEEK_SET);
-    fread(&ancho, sizeof(int), 1, archivo_viejo);
-    fread(&alto, sizeof(int), 1, archivo_viejo);
-
-    //Se calcula el padding del archivo.
-    int padding = (4 - (ancho * sizeof(t_pixel)) % 4) % 4;
-
-    //Nos paramos en el byte 10 para saber cuando empieza la imagen
-    fseek(archivo_viejo, 10, SEEK_SET);
-    fread(&offset_datos, sizeof(int), 1, archivo_viejo);
-
-    //De paso clonamos el encabezado
-    unsigned char *header_buffer = malloc(offset_datos);
-    if(header_buffer == NULL)
-    {
-        perror("Hubo un problema y no se pudo guardar en memoria.\n");
-        return;
-    }
-    fseek(archivo_viejo, 0, SEEK_SET);
-    fread(header_buffer, offset_datos, 1, archivo_viejo);
-    size_t tamano_header = (size_t)offset_datos;
-
-    //Nos paramos donde empieza la imagen para pasarla a la matriz
-    fseek(archivo_viejo, offset_datos, SEEK_SET);
-
-    //Cargamos la imagen a la matriz de pixeles
-    t_pixel** imagen = malloc(alto * sizeof(t_pixel*));
-    if(imagen == NULL)
-    {
-        perror("Hubo un error y no se pudo guardar en memoria.\n");
-        return;
-    }
-
-    for(int y = 0; y < alto; y++)
-    {
-        imagen[y] = malloc(ancho * sizeof(t_pixel));
-
-        //Si hay un error lo informamos y liberamos la memoria anterior
-        if(imagen[y] == NULL)
-        {
-            perror("Hubo un error y no se pudo guardar en memoria.\n");
-            for(int k = 0; k < y; k++)
-            {
-                free(imagen[k]);
-            }
-
-            free(imagen);
-            free(header_buffer);
-            fclose(archivo_viejo);
-
-            return;
-        }
-
-        fread(imagen[y], sizeof(t_pixel), ancho, archivo_viejo);
-
-        //Tener en cuenta el padding
-        if(padding > 0)
-        {
-            fseek(archivo_viejo, padding, SEEK_CUR);
-        }
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
     //DONDE Y ES LA FILA Y X ES LA COLUMNA
 
-    fclose(archivo_viejo);
-
     //Cambiamos los pixeles a sus opuestos para crear el negativo
 
-    for(int y = 0; y < alto; y++)
+    for(int y = 0; y < abs(img.metadata.alto); y++)
     {
-        for(int x = 0; x < ancho; x++)
+        for(int x = 0; x < img.metadata.ancho; x++)
         {
             //Para invertir los valores rgb hay que hacer: valor_invertido = 255 - valor
 
-            imagen[y][x].r = 255 - imagen[y][x].r;
-            imagen[y][x].g = 255 - imagen[y][x].g;
-            imagen[y][x].b = 255 - imagen[y][x].b;
+            img.pixeles[y][x].r = 255 - img.pixeles[y][x].r;
+            img.pixeles[y][x].g = 255 - img.pixeles[y][x].g;
+            img.pixeles[y][x].b = 255 - img.pixeles[y][x].b;
         }
     }
 
     //Como tuvimos en cuenta el padding en la carga ahora no hace falta
 
+
+    //Creamos un nombre nuevo para el archivo
     char nombre_archivo_nuevo[256];
 
     strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
     strcat(nombre_archivo_nuevo, "negativo_");
     strcat(nombre_archivo_nuevo, argv[POS_ARCHIVO]);
 
-
-    //Creamos el archivo nuevo para cargar la matriz modificada
-
-    archivo_nuevo = fopen(nombre_archivo_nuevo, "wb");
-    if(archivo_nuevo == NULL)
+    //Cargamos la matriz a un archivo nuevo.
+    if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)//Devuelve 0 si guarda correctamente la imagen, sino devuelve otro valor
     {
-        perror("Ocurrio un error y no se pudo crear el archivo.\n");
         return;
     }
 
-    //Pasamos el mismo encabezado al nuevo archivo
-    fwrite(header_buffer, 1, tamano_header, archivo_nuevo);
-
-    unsigned char padding_bytes[3] = {0, 0, 0};
-
-    //Cargamos la matriz modificada al archivo nuevo
-    for(int y = 0; y < alto; y++)
-    {
-        fwrite(imagen[y], sizeof(t_pixel), ancho, archivo_nuevo);
-
-        //Si hay padding lo agregamos
-        if(padding > 0)
-        {
-            fwrite(padding_bytes, 1, padding, archivo_nuevo);
-        }
-
-    }
-
-    //Cerramos el archivo nuevo.
-    fclose(archivo_nuevo);
-
-    printf("Se creo el archivo %s corrertamente.\n", nombre_archivo_nuevo);
-
     //Liberamos la memoria de la matriz
-    for(int y = 0; y < alto; y++)
-    {
-        free(imagen[y]);
-    }
-
-    free(imagen);
-    free(header_buffer);
+    imagenLiberar(&img);
 
 }
 
@@ -161,10 +55,12 @@ void pixelGrises(char *argv[])
     char direccion[256];
     snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, argv[POS_ARCHIVO]);
 
+    printf("Intentando abrir: [%s]\n", direccion);
+
     archivo_viejo = fopen(direccion, "rb");
     if(archivo_viejo == NULL)
     {
-        perror("No se pudo abrir el archivo correctamente.\n");
+        perror("No se pudo abrir el archivo correctamente.");
         return;
     }
 
@@ -1370,7 +1266,6 @@ void pixelTonVerde(char *argv[], int valor)
 
     sprintf(num_buff, "%d", valor);
 
-    char direccion[256];
     snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, argv[POS_ARCHIVO]);
 
     strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
@@ -1649,4 +1544,168 @@ void pixelRecortar(char *argv[], int valor)
     free(imagen_recort);
     free(imagen);
     free(header_buffer);
+}
+
+int imagenCargar(t_imagen *img, const char *nombre)
+{
+    FILE *archivo;
+
+    img->metadata.encabezado = NULL;
+    img->pixeles = NULL;
+    img->metadata.alto = 0;
+    img->metadata.ancho = 0;
+
+    char direccion[256];
+    snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, nombre);
+
+    //ABRIMOS EL ARCHIVO.
+    archivo = fopen(direccion, "rb");
+    if(archivo == NULL)
+    {
+        perror("Ocurrio un error y no se pudo abrir el archivo.");
+        return 1;
+    }
+
+    int offset_datos;
+
+    //LOS BYTES 18-25 NOS DICEN EL ANCHO Y EL ALTO DE LA IMAGEN.
+    fseek(archivo, 18, SEEK_SET);
+    if(fread(&img->metadata.ancho, sizeof(int), 1, archivo) != 1)
+        goto error;
+    if(fread(&img->metadata.alto, sizeof(int), 1, archivo) != 1)
+        goto error;
+
+    int filas = abs(img->metadata.alto);
+
+    int padding = (4 - (img->metadata.ancho * sizeof(t_pixel)) % 4) % 4;
+
+    //EL BYTE 10 NOS DICE DONDE EMPIEZA LA IMAGEN
+    fseek(archivo, 10, SEEK_SET);
+    if(fread(&offset_datos, sizeof(int), 1, archivo) != 1)
+        goto error;
+
+    if(offset_datos < 54)
+        goto error;
+
+    if(img->metadata.ancho <= 0 || img->metadata.alto == 0)
+        goto error;
+
+    //CLONAMOS EL ENCABEZADO.
+    img->metadata.encabezado = malloc(offset_datos);
+    if(img->metadata.encabezado == NULL)
+    {
+        goto error;
+    }
+    fseek(archivo, 0, SEEK_SET);
+    if(fread(img->metadata.encabezado, offset_datos, 1, archivo) != 1)
+        goto error;
+    img->metadata.tamEncabezado = (unsigned int)offset_datos;
+
+    //NOS PARAMOS DONDE EMPIEZA LA IMAGEN PARA CARGAR LA MATRIZ
+    fseek(archivo, offset_datos, SEEK_SET);
+
+    //CARGAMOS EL ARCHIVO A LA MATRIZ.
+    img->pixeles = calloc(filas, sizeof(t_pixel*));
+    if(img->pixeles == NULL)
+    {
+        goto error;
+    }
+
+    for(int y = 0; y < filas; y++)
+    {
+        img->pixeles[y] = malloc(img->metadata.ancho * sizeof(t_pixel));
+        if(img->pixeles[y] == NULL)
+        {
+            goto error;
+        }
+
+        if(fread(img->pixeles[y], sizeof(t_pixel), img->metadata.ancho, archivo) != (size_t)img->metadata.ancho)
+            goto error;
+
+        //TENER EN CUENTA EL PADDING
+        if(padding > 0)
+        {
+            fseek(archivo, padding, SEEK_CUR);
+        }
+    }
+
+    //CERRAMOS EL ARCHIVO
+    fclose(archivo);
+
+    return 0;
+
+    error:
+        fclose(archivo);
+        imagenLiberar(img);
+        return 1;
+}
+
+void imagenLiberar(t_imagen *img)
+{
+    if(img->pixeles != NULL)
+    {
+        for(int y = 0; y < abs(img->metadata.alto); y++)
+        {
+            free(img->pixeles[y]);
+        }
+
+        free(img->pixeles);
+    }
+
+    free(img->metadata.encabezado);
+
+    img->metadata.encabezado = NULL;
+    img->pixeles = NULL;
+}
+
+int imagenGuardar(t_imagen *img, const char *nombre)
+{
+    FILE *archivo_nuevo;
+
+    int padding = (4 - (img->metadata.ancho * sizeof(t_pixel)) % 4) % 4;
+    int filas = abs(img->metadata.alto);
+    int tamano_imagen = (img->metadata.ancho * (int)sizeof(t_pixel) + padding) * filas;
+    img->metadata.tamArchivo = tamano_imagen + (int)img->metadata.tamEncabezado;
+
+
+    archivo_nuevo = fopen(nombre, "wb");
+    if(archivo_nuevo == NULL)
+    {
+        printf("Ocurrio un error y no se pudo crear el archivo %s.\n", nombre);
+        return 1;
+    }
+
+    memcpy(img->metadata.encabezado + 2, &img->metadata.tamArchivo, sizeof(int));
+    memcpy(img->metadata.encabezado + 18, &img->metadata.ancho, sizeof(int));
+    memcpy(img->metadata.encabezado + 22, &img->metadata.alto, sizeof(int));
+    memcpy(img->metadata.encabezado + 34, &tamano_imagen, sizeof(int));
+
+    if(fwrite(img->metadata.encabezado, 1, img->metadata.tamEncabezado, archivo_nuevo) != img->metadata.tamEncabezado)
+    {
+        fclose(archivo_nuevo);
+        return 1;
+    }
+
+    unsigned char padding_bytes[3] = {0, 0, 0};
+
+    for(int y = 0; y < abs(img->metadata.alto); y++)
+    {
+        if(fwrite(img->pixeles[y], sizeof(t_pixel), img->metadata.ancho, archivo_nuevo) != (size_t)img->metadata.ancho)
+        {
+            fclose(archivo_nuevo);
+            return 1;
+        }
+
+        if(padding > 0 && fwrite(padding_bytes, 1, padding, archivo_nuevo) != (size_t)padding)
+        {
+            fclose(archivo_nuevo);
+            return 1;
+        }
+    }
+
+    fclose(archivo_nuevo);
+
+    printf("Se creo el archivo %s correctamente.\n", nombre);
+
+    return 0;
 }

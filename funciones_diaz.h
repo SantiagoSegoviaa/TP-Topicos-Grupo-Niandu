@@ -25,7 +25,7 @@ int imagenGuardar(t_imagen *img, const char *nombre);
 void imagenLiberar(t_imagen *img);
 
 
-unsigned char pixelValorMasContrast(unsigned char valorCanal, double factor);
+unsigned char pixelValorContrast(unsigned char valorCanal, double factor);
 
 
 #endif // FUNCIONES_DIAZ_H_INCLUDED

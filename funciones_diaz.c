@@ -1,7 +1,7 @@
 #include "funciones_diaz.h"
 #include "estructuras.h"
 
-void pixelNegativo(char *argv[])
+int pixelNegativo(char *argv[])
 {
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
@@ -10,7 +10,7 @@ void pixelNegativo(char *argv[])
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
-        return;
+        return 1;
     }
 
     int ancho, alto, offset_datos;
@@ -32,7 +32,7 @@ void pixelNegativo(char *argv[])
     if(header_buffer == NULL)
     {
         perror("Hubo un problema y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
     fseek(archivo_viejo, 0, SEEK_SET);
     fread(header_buffer, offset_datos, 1, archivo_viejo);
@@ -46,7 +46,7 @@ void pixelNegativo(char *argv[])
     if(imagen == NULL)
     {
         perror("Hubo un error y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
 
     for(int y = 0; y < alto; y++)
@@ -66,7 +66,7 @@ void pixelNegativo(char *argv[])
             free(header_buffer);
             fclose(archivo_viejo);
 
-            return;
+            return 1;
         }
 
         fread(imagen[y], sizeof(t_pixel), ancho, archivo_viejo);
@@ -112,7 +112,7 @@ void pixelNegativo(char *argv[])
     if(archivo_nuevo == NULL)
     {
         perror("Ocurrio un error y no se pudo crear el archivo.\n");
-        return;
+        return 1;
     }
 
     //Pasamos el mismo encabezado al nuevo archivo
@@ -136,7 +136,7 @@ void pixelNegativo(char *argv[])
     //Cerramos el archivo nuevo.
     fclose(archivo_nuevo);
 
-    printf("Se creo el archivo %s corrertamente.\n", nombre_archivo_nuevo);
+    printf("Se creo el archivo %s correctamente.\n", nombre_archivo_nuevo);
 
     //Liberamos la memoria de la matriz
     for(int y = 0; y < alto; y++)
@@ -147,9 +147,11 @@ void pixelNegativo(char *argv[])
     free(imagen);
     free(header_buffer);
 
+
+    return 0;
 }
 
-void pixelGrises(char *argv[])
+int pixelGrises(char *argv[])
 {
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
@@ -158,7 +160,7 @@ void pixelGrises(char *argv[])
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
-        return;
+        return 1;
     }
 
     int ancho, alto, offset_datos;
@@ -180,7 +182,7 @@ void pixelGrises(char *argv[])
     if(header_buffer == NULL)
     {
         perror("Hubo un problema y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
     fseek(archivo_viejo, 0, SEEK_SET);
     fread(header_buffer, offset_datos, 1, archivo_viejo);
@@ -194,7 +196,7 @@ void pixelGrises(char *argv[])
     if(imagen == NULL)
     {
         perror("Hubo un error y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
 
     for(int y = 0; y < alto; y++)
@@ -214,7 +216,7 @@ void pixelGrises(char *argv[])
             free(header_buffer);
             fclose(archivo_viejo);
 
-            return;
+            return 1;
         }
 
         fread(imagen[y], sizeof(t_pixel), ancho, archivo_viejo);
@@ -266,7 +268,7 @@ void pixelGrises(char *argv[])
     if(archivo_nuevo == NULL)
     {
         perror("Ocurrio un error y no se pudo crear el archivo.\n");
-        return;
+        return 1;
     }
 
     //Pasamos el mismo encabezado al nuevo archivo
@@ -301,9 +303,11 @@ void pixelGrises(char *argv[])
     free(imagen);
     free(header_buffer);
 
+
+    return 0;
 }
 
-void pixelEspHoriz(char* argv[])
+int pixelEspHoriz(char* argv[])
 {
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
@@ -312,7 +316,7 @@ void pixelEspHoriz(char* argv[])
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
-        return;
+        return 1;
     }
 
     int ancho, alto, offset_datos;
@@ -334,7 +338,7 @@ void pixelEspHoriz(char* argv[])
     if(header_buffer == NULL)
     {
         perror("Hubo un problema y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
     fseek(archivo_viejo, 0, SEEK_SET);
     fread(header_buffer, offset_datos, 1, archivo_viejo);
@@ -348,7 +352,7 @@ void pixelEspHoriz(char* argv[])
     if(imagen == NULL)
     {
         perror("Hubo un error y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
 
     for(int y = 0; y < alto; y++)
@@ -368,7 +372,7 @@ void pixelEspHoriz(char* argv[])
             free(header_buffer);
             fclose(archivo_viejo);
 
-            return;
+            return 1;
         }
 
         fread(imagen[y], sizeof(t_pixel), ancho, archivo_viejo);
@@ -417,7 +421,7 @@ void pixelEspHoriz(char* argv[])
     if(archivo_nuevo == NULL)
     {
         perror("Ocurrio un error y no se pudo crear el archivo.\n");
-        return;
+        return 1;
     }
 
     //Pasamos el mismo encabezado al nuevo archivo
@@ -451,9 +455,11 @@ void pixelEspHoriz(char* argv[])
 
     free(imagen);
     free(header_buffer);
+
+    return 0;
 }
 
-void pixelEspVert(char* argv[])
+int pixelEspVert(char* argv[])
 {
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
@@ -462,7 +468,7 @@ void pixelEspVert(char* argv[])
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
-        return;
+        return 1;
     }
 
     int ancho, alto, offset_datos;
@@ -484,7 +490,7 @@ void pixelEspVert(char* argv[])
     if(header_buffer == NULL)
     {
         perror("Hubo un problema y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
     fseek(archivo_viejo, 0, SEEK_SET);
     fread(header_buffer, offset_datos, 1, archivo_viejo);
@@ -498,7 +504,7 @@ void pixelEspVert(char* argv[])
     if(imagen == NULL)
     {
         perror("Hubo un error y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
 
     for(int y = 0; y < alto; y++)
@@ -518,7 +524,7 @@ void pixelEspVert(char* argv[])
             free(header_buffer);
             fclose(archivo_viejo);
 
-            return;
+            return 1;
         }
 
         fread(imagen[y], sizeof(t_pixel), ancho, archivo_viejo);
@@ -566,7 +572,7 @@ void pixelEspVert(char* argv[])
     if(archivo_nuevo == NULL)
     {
         perror("Ocurrio un error y no se pudo crear el archivo.\n");
-        return;
+        return 1;
     }
 
     //Pasamos el mismo encabezado al nuevo archivo
@@ -600,9 +606,11 @@ void pixelEspVert(char* argv[])
 
     free(imagen);
     free(header_buffer);
+
+    return 0;
 }
 
-void pixelMasContrast(char *argv[], int valor)
+int pixelMasContrast(char *argv[], int valor)
 {
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
@@ -611,7 +619,7 @@ void pixelMasContrast(char *argv[], int valor)
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
-        return;
+        return 1;
     }
 
     int ancho, alto, offset_datos;
@@ -633,7 +641,7 @@ void pixelMasContrast(char *argv[], int valor)
     if(header_buffer == NULL)
     {
         perror("Hubo un problema y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
     fseek(archivo_viejo, 0, SEEK_SET);
     fread(header_buffer, offset_datos, 1, archivo_viejo);
@@ -647,7 +655,7 @@ void pixelMasContrast(char *argv[], int valor)
     if(imagen == NULL)
     {
         perror("Hubo un error y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
 
     for(int y = 0; y < alto; y++)
@@ -667,7 +675,7 @@ void pixelMasContrast(char *argv[], int valor)
             free(header_buffer);
             fclose(archivo_viejo);
 
-            return;
+            return 1;
         }
 
         fread(imagen[y], sizeof(t_pixel), ancho, archivo_viejo);
@@ -719,7 +727,7 @@ void pixelMasContrast(char *argv[], int valor)
     if(archivo_nuevo == NULL)
     {
         perror("Ocurrio un error y no se pudo crear el archivo.\n");
-        return;
+        return 1;
     }
 
     //Pasamos el mismo encabezado al nuevo archivo
@@ -753,9 +761,11 @@ void pixelMasContrast(char *argv[], int valor)
 
     free(imagen);
     free(header_buffer);
+
+    return 0;
 }
 
-void pixelMenosContrast(char* argv[], int valor)
+int pixelMenosContrast(char* argv[], int valor)
 {
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
@@ -764,7 +774,7 @@ void pixelMenosContrast(char* argv[], int valor)
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
-        return;
+        return 1;
     }
 
     int ancho, alto, offset_datos;
@@ -786,7 +796,7 @@ void pixelMenosContrast(char* argv[], int valor)
     if(header_buffer == NULL)
     {
         perror("Hubo un problema y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
     fseek(archivo_viejo, 0, SEEK_SET);
     fread(header_buffer, offset_datos, 1, archivo_viejo);
@@ -800,7 +810,7 @@ void pixelMenosContrast(char* argv[], int valor)
     if(imagen == NULL)
     {
         perror("Hubo un error y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
 
     for(int y = 0; y < alto; y++)
@@ -820,7 +830,7 @@ void pixelMenosContrast(char* argv[], int valor)
             free(header_buffer);
             fclose(archivo_viejo);
 
-            return;
+            return 1;
         }
 
         fread(imagen[y], sizeof(t_pixel), ancho, archivo_viejo);
@@ -872,7 +882,7 @@ void pixelMenosContrast(char* argv[], int valor)
     if(archivo_nuevo == NULL)
     {
         perror("Ocurrio un error y no se pudo crear el archivo.\n");
-        return;
+        return 1;
     }
 
     //Pasamos el mismo encabezado al nuevo archivo
@@ -906,6 +916,8 @@ void pixelMenosContrast(char* argv[], int valor)
 
     free(imagen);
     free(header_buffer);
+
+    return 0;
 }
 
 unsigned char pixelValorMasContrast(unsigned char valorCanal, double factor)
@@ -920,7 +932,7 @@ unsigned char pixelValorMasContrast(unsigned char valorCanal, double factor)
     return (unsigned char)valorNuevo;
 }
 
-void pixelTonRojo(char *argv[], int valor)
+int pixelTonRojo(char *argv[], int valor)
 {
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
@@ -929,7 +941,7 @@ void pixelTonRojo(char *argv[], int valor)
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
-        return;
+        return 1;
     }
 
     int ancho, alto, offset_datos;
@@ -951,7 +963,7 @@ void pixelTonRojo(char *argv[], int valor)
     if(header_buffer == NULL)
     {
         perror("Hubo un problema y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
     fseek(archivo_viejo, 0, SEEK_SET);
     fread(header_buffer, offset_datos, 1, archivo_viejo);
@@ -965,7 +977,7 @@ void pixelTonRojo(char *argv[], int valor)
     if(imagen == NULL)
     {
         perror("Hubo un error y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
 
     for(int y = 0; y < alto; y++)
@@ -985,7 +997,7 @@ void pixelTonRojo(char *argv[], int valor)
             free(header_buffer);
             fclose(archivo_viejo);
 
-            return;
+            return 1;
         }
 
         fread(imagen[y], sizeof(t_pixel), ancho, archivo_viejo);
@@ -1041,7 +1053,7 @@ void pixelTonRojo(char *argv[], int valor)
     if(archivo_nuevo == NULL)
     {
         perror("Ocurrio un error y no se pudo crear el archivo.\n");
-        return;
+        return 1;
     }
 
     //Pasamos el mismo encabezado al nuevo archivo
@@ -1075,9 +1087,11 @@ void pixelTonRojo(char *argv[], int valor)
 
     free(imagen);
     free(header_buffer);
+
+    return 0;
 }
 
-void pixelTonAzul(char *argv[], int valor)
+int pixelTonAzul(char *argv[], int valor)
 {
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
@@ -1086,7 +1100,7 @@ void pixelTonAzul(char *argv[], int valor)
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
-        return;
+        return 1;
     }
 
     int ancho, alto, offset_datos;
@@ -1108,7 +1122,7 @@ void pixelTonAzul(char *argv[], int valor)
     if(header_buffer == NULL)
     {
         perror("Hubo un problema y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
     fseek(archivo_viejo, 0, SEEK_SET);
     fread(header_buffer, offset_datos, 1, archivo_viejo);
@@ -1122,7 +1136,7 @@ void pixelTonAzul(char *argv[], int valor)
     if(imagen == NULL)
     {
         perror("Hubo un error y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
 
     for(int y = 0; y < alto; y++)
@@ -1142,7 +1156,7 @@ void pixelTonAzul(char *argv[], int valor)
             free(header_buffer);
             fclose(archivo_viejo);
 
-            return;
+            return 1;
         }
 
         fread(imagen[y], sizeof(t_pixel), ancho, archivo_viejo);
@@ -1198,7 +1212,7 @@ void pixelTonAzul(char *argv[], int valor)
     if(archivo_nuevo == NULL)
     {
         perror("Ocurrio un error y no se pudo crear el archivo.\n");
-        return;
+        return 1;
     }
 
     //Pasamos el mismo encabezado al nuevo archivo
@@ -1232,9 +1246,11 @@ void pixelTonAzul(char *argv[], int valor)
 
     free(imagen);
     free(header_buffer);
+
+    return 0;
 }
 
-void pixelTonVerde(char *argv[], int valor)
+int pixelTonVerde(char *argv[], int valor)
 {
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
@@ -1243,7 +1259,7 @@ void pixelTonVerde(char *argv[], int valor)
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
-        return;
+        return 1;
     }
 
     int ancho, alto, offset_datos;
@@ -1265,7 +1281,7 @@ void pixelTonVerde(char *argv[], int valor)
     if(header_buffer == NULL)
     {
         perror("Hubo un problema y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
     fseek(archivo_viejo, 0, SEEK_SET);
     fread(header_buffer, offset_datos, 1, archivo_viejo);
@@ -1279,7 +1295,7 @@ void pixelTonVerde(char *argv[], int valor)
     if(imagen == NULL)
     {
         perror("Hubo un error y no se pudo guardar en memoria.\n");
-        return;
+        return 1;
     }
 
     for(int y = 0; y < alto; y++)
@@ -1299,7 +1315,7 @@ void pixelTonVerde(char *argv[], int valor)
             free(header_buffer);
             fclose(archivo_viejo);
 
-            return;
+            return 1;
         }
 
         fread(imagen[y], sizeof(t_pixel), ancho, archivo_viejo);
@@ -1355,7 +1371,7 @@ void pixelTonVerde(char *argv[], int valor)
     if(archivo_nuevo == NULL)
     {
         perror("Ocurrio un error y no se pudo crear el archivo.\n");
-        return;
+        return 1;
     }
 
     //Pasamos el mismo encabezado al nuevo archivo
@@ -1389,9 +1405,11 @@ void pixelTonVerde(char *argv[], int valor)
 
     free(imagen);
     free(header_buffer);
+
+    return 0;
 }
 
-void pixelRecortar(char *argv[], int valor)
+int pixelRecortar(char *argv[], int valor)
 {
     FILE *archivo_viejo;
     FILE *archivo_nuevo;
@@ -1400,7 +1418,7 @@ void pixelRecortar(char *argv[], int valor)
     if(archivo_viejo == NULL)
     {
         perror("No se pudo abrir el archivo correctamente.\n");
-        return;
+        return 1;
     }
 
     int ancho, alto, offset_datos;
@@ -1423,7 +1441,7 @@ void pixelRecortar(char *argv[], int valor)
     {
         perror("Hubo un problema y no se pudo guardar en memoria.\n");
         fclose(archivo_viejo);
-        return;
+        return 1;
     }
     fseek(archivo_viejo, 0, SEEK_SET);
     fread(header_buffer, offset_datos, 1, archivo_viejo);
@@ -1438,7 +1456,7 @@ void pixelRecortar(char *argv[], int valor)
     {
         perror("Hubo un error y no se pudo guardar en memoria.\n");
         free(header_buffer);
-        return;
+        return 1;
     }
 
     for(int y = 0; y < alto; y++)
@@ -1458,7 +1476,7 @@ void pixelRecortar(char *argv[], int valor)
             free(header_buffer);
             fclose(archivo_viejo);
 
-            return;
+            return 1;
         }
 
         fread(imagen[y], sizeof(t_pixel), ancho, archivo_viejo);
@@ -1491,7 +1509,7 @@ void pixelRecortar(char *argv[], int valor)
         }
         free(imagen);
 
-        return;
+        return 1;
     }
 
     for(int y = 0; y < nuevo_alto; y++)
@@ -1513,7 +1531,7 @@ void pixelRecortar(char *argv[], int valor)
             }
             free(imagen);
 
-            return;
+            return 1;
         }
     }
 
@@ -1564,7 +1582,7 @@ void pixelRecortar(char *argv[], int valor)
         }
         free(imagen_recort);
 
-        return;
+        return 1;
     }
 
     //Como cambiaron las medidas calculamos el nuevo padding.
@@ -1615,4 +1633,6 @@ void pixelRecortar(char *argv[], int valor)
     free(imagen_recort);
     free(imagen);
     free(header_buffer);
+
+    return 0;
 }

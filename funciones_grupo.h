@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "funciones_diaz.h"
-
+#include "estructuras.h"
 #define ARGUMENTOS_MIN 3
 
 #define MODIF_INC 0
@@ -22,9 +22,9 @@ Aquí deben hacer los includes de sus archivos individuales, por ejemplo:
 
 int solucion(int argc, char* argv[]);
 bool esArchivoBMP(const char *nombre);
-int esModificacion(int argc, char *argv[], int pos);
+int esModificacion(int argc, char *argv[], int pos, t_funcion_encontrada *func);
 void validarModif(int cod);
-void ejecutarFuncion(int argc, const char *nombre, char *argv[]);
+void ejecutarFuncion(int argc, const char *nombre, char *argv[], t_funcion_encontrada *func);
 bool esRepetida(char *argv[], int pos);
 
 

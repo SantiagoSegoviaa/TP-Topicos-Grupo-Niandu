@@ -3,5 +3,6 @@
 *.bmp
 *.depend
 *.layout
+*.vscode
 
-!tests/*.bmp
+*.bmp

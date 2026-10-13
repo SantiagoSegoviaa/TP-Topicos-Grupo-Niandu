@@ -1,12 +1,12 @@
 #include "funciones_diaz.h"
 
-void pixelNegativo(char *argv[])
+int pixelNegativo(char *argv[])
 {
     t_imagen img;
 
     if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0) //Devuelve 0 si cargo la imagen correctamente, sino devuelve cualquier otro numero.
     {
-        return;
+        return 1;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -39,21 +39,23 @@ void pixelNegativo(char *argv[])
     //Cargamos la matriz a un archivo nuevo.
     if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)//Devuelve 0 si guarda correctamente la imagen, sino devuelve otro valor
     {
-        return;
+        return 1;
     }
 
     //Liberamos la memoria de la matriz
     imagenLiberar(&img);
 
+
+    return 0;
 }
 
-void pixelGrises(char *argv[])
+int pixelGrises(char *argv[])
 {
     t_imagen img;
 
     if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
     {
-        return;
+        return 1;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -91,22 +93,22 @@ void pixelGrises(char *argv[])
 
     if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return;
+        return 1;
     }
 
     //Liberamos la memoria de la matriz
     imagenLiberar(&img);
 
-    return;
+    return 0;
 }
 
-void pixelEspHoriz(char* argv[])
+int pixelEspHoriz(char* argv[])
 {
     t_imagen img;
 
     if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
     {
-        return;
+        return 1;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -142,22 +144,22 @@ void pixelEspHoriz(char* argv[])
 
     if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return;
+        return 1;
     }
 
     //Liberamos la memoria de la matriz
     imagenLiberar(&img);
 
-    return;
+    return 0;
 }
 
-void pixelEspVert(char* argv[])
+int pixelEspVert(char* argv[])
 {
     t_imagen img;
 
     if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
     {
-        return;
+        return 1;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -192,22 +194,22 @@ void pixelEspVert(char* argv[])
 
     if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return;
+        return 1;
     }
 
     //Liberamos la memoria de la matriz
     imagenLiberar(&img);
 
-    return;
+    return 0;
 }
 
-void pixelMasContrast(char *argv[], int valor)
+int pixelMasContrast(char *argv[], int valor)
 {
     t_imagen img;
 
     if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
     {
-        return;
+        return 1;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -246,22 +248,22 @@ void pixelMasContrast(char *argv[], int valor)
 
     if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return;
+        return 1;
     }
 
     //Liberamos la memoria de la matriz
     imagenLiberar(&img);
 
-    return;
+    return 0;
 }
 
-void pixelMenosContrast(char* argv[], int valor)
+int pixelMenosContrast(char* argv[], int valor)
 {
     t_imagen img;
 
     if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
     {
-        return;
+        return 1;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -299,7 +301,7 @@ void pixelMenosContrast(char* argv[], int valor)
 
     if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return;
+        return 1;
     }
 
 
@@ -307,7 +309,7 @@ void pixelMenosContrast(char* argv[], int valor)
 
     imagenLiberar(&img);
 
-    return;
+    return 0;
 }
 
 unsigned char pixelValorContrast(unsigned char valorCanal, double factor)
@@ -322,13 +324,13 @@ unsigned char pixelValorContrast(unsigned char valorCanal, double factor)
     return (unsigned char)valorNuevo;
 }
 
-void pixelTonRojo(char *argv[], int valor)
+int pixelTonRojo(char *argv[], int valor)
 {
     t_imagen img;
 
     if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
     {
-        return;
+        return 1;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -368,22 +370,22 @@ void pixelTonRojo(char *argv[], int valor)
 
     if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return;
+        return 1;
     }
 
     //Liberamos la memoria de la matriz
     imagenLiberar(&img);
 
-    return;
+    return 0;
 }
 
-void pixelTonAzul(char *argv[], int valor)
+int pixelTonAzul(char *argv[], int valor)
 {
     t_imagen img;
 
     if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
     {
-        return;
+        return 1;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -423,22 +425,22 @@ void pixelTonAzul(char *argv[], int valor)
 
     if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return;
+        return 1;
     }
 
     //Liberamos la memoria de la matriz
     imagenLiberar(&img);
 
-    return;
+    return 0;
 }
 
-void pixelTonVerde(char *argv[], int valor)
+int pixelTonVerde(char *argv[], int valor)
 {
     t_imagen img;
 
     if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
     {
-        return;
+        return 1;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -478,23 +480,23 @@ void pixelTonVerde(char *argv[], int valor)
 
     if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return;
+        return 1;
     }
 
     //Liberamos la memoria de la matriz
     imagenLiberar(&img);
 
-    return;
+    return 0;
 }
 
-void pixelRecortar(char *argv[], int valor)
+int pixelRecortar(char *argv[], int valor)
 {
     t_imagen img;
     t_imagen imgRecorte;
 
     if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
     {
-        return;
+        return 1;
     }
 
     imgRecorte.pixeles = NULL;
@@ -502,7 +504,7 @@ void pixelRecortar(char *argv[], int valor)
     if(imgRecorte.metadata.encabezado == NULL)
     {
         imagenLiberar(&img);
-        return;
+        return 1;
     }
     memcpy(imgRecorte.metadata.encabezado, img.metadata.encabezado, img.metadata.tamEncabezado);
     imgRecorte.metadata.tamEncabezado = img.metadata.tamEncabezado;
@@ -520,7 +522,7 @@ void pixelRecortar(char *argv[], int valor)
         printf("El recorte resulta en una imagen vacia.\n");
         imagenLiberar(&imgRecorte);
         imagenLiberar(&img);
-        return;
+        return 1;
     }
 
     //Crear nueva matriz con las nuevas medidas
@@ -531,7 +533,7 @@ void pixelRecortar(char *argv[], int valor)
         imagenLiberar(&imgRecorte);
         imagenLiberar(&img);
 
-        return;
+        return 1;
     }
 
     for(int y = 0; y < abs(imgRecorte.metadata.alto); y++)
@@ -544,7 +546,7 @@ void pixelRecortar(char *argv[], int valor)
             imagenLiberar(&imgRecorte);
             imagenLiberar(&img);
 
-            return;
+            return 1;
         }
     }
 
@@ -579,7 +581,7 @@ void pixelRecortar(char *argv[], int valor)
     {
         imagenLiberar(&imgRecorte);
         imagenLiberar(&img);
-        return;
+        return 1;
     }
 
 
@@ -587,5 +589,5 @@ void pixelRecortar(char *argv[], int valor)
     imagenLiberar(&img);
     imagenLiberar(&imgRecorte);
 
-    return;
+    return 0;
 }

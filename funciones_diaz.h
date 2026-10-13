@@ -7,16 +7,16 @@
 #include "estructuras.h"
 #include "compartidas.h"
 
-void pixelNegativo(char *argv[]);
-void pixelGrises(char *argv[]);
-void pixelEspHoriz(char *argv[]);
-void pixelEspVert(char *argv[]);
-void pixelMasContrast(char *argv[], int valor);
-void pixelMenosContrast(char *argv[], int valor);
-void pixelTonRojo(char *argv[], int valor);
-void pixelTonAzul(char *argv[], int valor);
-void pixelTonVerde(char *argv[], int valor);
-void pixelRecortar(char *argv[], int valor);
+int pixelNegativo(char *argv[]);
+int pixelGrises(char *argv[]);
+int pixelEspHoriz(char *argv[]);
+int pixelEspVert(char *argv[]);
+int pixelMasContrast(char *argv[], int valor);
+int pixelMenosContrast(char *argv[], int valor);
+int pixelTonRojo(char *argv[], int valor);
+int pixelTonAzul(char *argv[], int valor);
+int pixelTonVerde(char *argv[], int valor);
+int pixelRecortar(char *argv[], int valor);
 
 unsigned char pixelValorContrast(unsigned char valorCanal, double factor);
 

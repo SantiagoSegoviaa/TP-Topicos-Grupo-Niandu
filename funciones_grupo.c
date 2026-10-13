@@ -29,9 +29,8 @@
 
 int solucion(int argc, char* argv[])
 {
-    /*
-        Aquí deben hacer el código que solucione lo solicitado.
-	*/
+
+    t_funcion_encontrada encontrada; // ESTRUCTURA DONDE SE GUARDARA LA FUNCION ENCONTRADA Y SU VALOR HALLADO PARA SER EJECUTADA
 
     //Validar argumentos minimos: bmpmanipuleitor.exe <funcionalidad> <archivo origen>
     if(argc < ARGUMENTOS_MIN)
@@ -40,10 +39,6 @@ int solucion(int argc, char* argv[])
         return 1;
     }
 
-    //Validar que el segundo argumento sea una funcionalidad valida
-    int cod = esModificacion(argc, argv, 1);
-    validarModif(cod);
-
     //Validar que el tercer argumento sea un archivo .bmp
     if(!esArchivoBMP(argv[POS_ARCHIVO]))
     {
@@ -51,89 +46,117 @@ int solucion(int argc, char* argv[])
         return 1;
     }
 
+    //Validar que el segundo argumento sea una funcionalidad valida
+    int cod = esModificacion(argc, argv, 1, &encontrada);
+    if(cod != VALIDA)
+    {
+        validarModif(cod);
+        return 1;
+    }
+
     //Ejecutamos la funcion que viene con el segundo argumento.
-    ejecutarFuncion(argc, argv[1], argv);
+    ejecutarFuncion(argc, argv[1], argv,&encontrada);
 
     //Ejecutamos cada funcion que sigue despues del tercer argumento
     for(int i = 3; i < argc; i++)
     {
-        if(esModificacion(argc, argv, i) == VALIDA && !esRepetida(argv, i))
+        if(esModificacion(argc, argv, i,&encontrada) == VALIDA && !esRepetida(argv, i))
         {
-            ejecutarFuncion(argc, argv[i], argv);
+            ejecutarFuncion(argc, argv[i], argv, &encontrada);
         }
     }
 
     return 0;
 }
 
-bool esArchivoBMP(const char *nombre)
+bool esArchivoBMP(const char *ruta)
 {
-    int i = 0;
-    int pos_punto = -1;
+    unsigned char firma[2];
+    size_t bytesleidos;
+    char *inicioformato;
 
-    while(nombre[i] != '\0')
-    {
-        if(nombre[i] == '.')
-        {
-            pos_punto = i;
-        }
-
-        i++;
-    }
-
-    if(pos_punto == -1)
+    inicioformato = strrchr(ruta, '.');
+    if(!inicioformato)
         return false;
 
-    if(strcasecmp(&nombre[pos_punto], ".bmp") == 0)
+    if(strcmp(inicioformato, ".bmp") == 0)
+    {
+        FILE *archivo = fopen(ruta,"rb");
+        if(!archivo)
+            return false;
+
+        bytesleidos = fread(firma,1,2,archivo);
+        fclose(archivo);
+
+        if(bytesleidos!= 2)
+            return false;
+        if(*firma != 'B' || *(firma+1) != 'M')
+            return false;
+
         return true;
+    }
 
     return false;
 }
 
-int esModificacion(int argc, char *argv[], int pos)
+int esModificacion(int argc, char *argv[], int pos, t_funcion_encontrada *func)
 {
-    const char *nombre = argv[pos];
-    const char *func_normales[] = {"escala-de-grises",
-                                    "espejar-horizontal",
-                                    "espejar-vertical",
-                                    "rotar-derecha",
-                                    "rotar-izquierda",
-                                    "negativo",
-                                    "copia-prueba"
-                                        };
+    int cant_normales;
+    int cant_porc ;
+    //int cant_dobl;
 
-    int cant_normales = sizeof(func_normales) / sizeof(func_normales[0]);
+    const t_modif_normal *ptr_normal;
+    const t_modif_normal *fin_normal;
 
-    const char *func_porc[] = {"aumentar-contraste=",
-                                "reducir-contraste=",
-                                "tonalidad-azul=",
-                                "tonalidad-verde=",
-                                "tonalidad-roja=",
-                                "recortar=",
-                                "achicar="
-                                    };
+    const char *nombre = *(argv+pos);
 
-    int cant_porc = sizeof(func_porc) / sizeof(func_porc[0]);
+    func->normal=NULL;
+    func->porc=NULL;
 
-    const char *func_dobl[] = {"concatenar-horizontal",
-                               "concatenar-vertical"
-                                };
+    const t_modif_normal funciones_normales[] = {
+    {"--negativo", pixelNegativo},
+    {"--escala-de-grises", pixelGrises},
+    {"--espejar-horizontal", pixelEspHoriz},
+    {"--espejar-vertical", pixelEspVert}
+    };
 
-    int cant_dobl = sizeof(func_dobl) / sizeof(func_dobl[0]);
+    const t_modif_porc *ptr_porc;
+    const t_modif_porc *fin_porc;
+
+    const t_modif_porc func_porc[] = {
+    {"--aumentar-contraste=",pixelMasContrast},
+    {"--reducir-contraste=",pixelMenosContrast},
+    {"--tonalidad-azul=",pixelTonAzul},
+    {"--tonalidad-verde=",pixelTonVerde},
+    {"--tonalidad-roja=",pixelTonRojo},
+    {"--recortar=",pixelRecortar}
+    };
+
+
+    cant_normales = sizeof(funciones_normales) / sizeof(*funciones_normales);
+    cant_porc = sizeof(func_porc) / sizeof(*func_porc);
 
     //Verificar si es una funcion normal
-    for(int i = 0; i < cant_normales; i++)
+
+    fin_normal = funciones_normales + cant_normales;
+
+    for(ptr_normal = funciones_normales ; ptr_normal< fin_normal ; ptr_normal++)
     {
-        if(strcmp(nombre, func_normales[i]) == 0)
+        if(strcmp(nombre,ptr_normal->nombre_funcion)==0)
+        {
+            func->normal = ptr_normal->funcion;
             return VALIDA;
+        }
     }
 
     //Verificar si es una funcion con porcentaje.
-    for(int i = 0; i < cant_porc; i++)
-    {
-        size_t largo_func = strlen(func_porc[i]);
+    fin_porc = func_porc + cant_porc;
 
-        if(strncmp(nombre, func_porc[i], largo_func) == 0)
+    for(ptr_porc = func_porc; ptr_porc < fin_porc; ptr_porc++)
+    {
+        size_t largo_func = strlen(ptr_porc->nombre_funcion);
+
+        if(strncmp(nombre, ptr_porc->nombre_funcion, largo_func) == 0)
         {
             int valor;
             char basura;
@@ -142,36 +165,19 @@ int esModificacion(int argc, char *argv[], int pos)
             const char *nombre_valor = nombre + largo_func;
 
             int leidos = sscanf(nombre_valor, "%d%c", &valor, &basura);
-            if(leidos == 1 && valor > 0 && valor <= 100)
+            if(leidos == 1 && valor >= 0 && valor <= 100)
+            {
+                func->porc = ptr_porc->funcion;
+                func->valor = valor;
                 return VALIDA;
+            }
             else
                 return VALOR_INC;
         }
     }
 
-    //Verificar si es una funcion que necesita dos imagenes
-    for(int i = 0; i < cant_dobl; i++)
-    {
-        if(strcmp(nombre, func_dobl[i]) == 0)
-        {
-            //Verificar que los argumentos tenga dos archivos .bmp
-            int contador = 0;
-            for(int j = 1; j < argc; j++)
-            {
-                if(esArchivoBMP(argv[j]))
-                {
-                    contador++;
-                }
-            }
+    //Verificar si es una funcion que necesita dos imagenes -- TO DO
 
-            //printf("[DEBUG] Funcion: %s | Total archivos .bmp detectados: %d\n", nombre, contador);
-
-            if(contador == 2)
-                return VALIDA;
-            else
-                return FALTA_IMAG;
-        }
-    }
 
     return MODIF_INC;
 }
@@ -194,78 +200,13 @@ void validarModif(int cod)
     }
 }
 
-void ejecutarFuncion(int argc, const char *nombre, char *argv[])
+void ejecutarFuncion(int argc, const char *nombre, char *argv[],t_funcion_encontrada *func)
 {
-    if(strcmp(nombre, "negativo") == 0)
-    {
-        pixelNegativo(argv);
-    }
-    else if(strcmp(nombre, "escala-de-grises") == 0)
-    {
-        pixelGrises(argv);
-    }
-    else if(strcmp(nombre, "espejar-horizontal") == 0)
-    {
-        pixelEspHoriz(argv);
-    }
-    else if(strcmp(nombre, "espejar-vertical") == 0)
-    {
-        pixelEspVert(argv);
-    }
-    else if(strncmp(nombre, "aumentar-contraste=", strlen("aumentar-contraste=")) == 0)
-    {
-        const char *nombre_valor = nombre + strlen("aumentar-contraste=");
-        int valor;
 
-        sscanf(nombre_valor, "%d", &valor);
-
-        pixelMasContrast(argv, valor);
-    }
-    else if(strncmp(nombre, "reducir-contraste=", strlen("reducir-contraste=")) == 0)
-    {
-        const char *nombre_valor = nombre + strlen("reducir-contraste=");
-        int valor;
-
-        sscanf(nombre_valor, "%d", &valor);
-
-        pixelMenosContrast(argv, valor);
-    }
-    else if(strncmp(nombre, "tonalidad-roja=", strlen("tonalidad-roja=")) == 0)
-    {
-        const char *nombre_valor = nombre + strlen("tonalidad-roja=");
-        int valor;
-
-        sscanf(nombre_valor, "%d", &valor);
-
-        pixelTonRojo(argv, valor);
-    }
-    else if(strncmp(nombre, "tonalidad-azul=", strlen("tonalidad-azul=")) == 0)
-    {
-        const char *nombre_valor = nombre + strlen("tonalidad-azul=");
-        int valor;
-
-        sscanf(nombre_valor, "%d", &valor);
-
-        pixelTonAzul(argv, valor);
-    }
-    else if(strncmp(nombre, "tonalidad-verde=", strlen("tonalidad-verde=")) == 0)
-    {
-        const char *nombre_valor = nombre + strlen("tonalidad-verde=");
-        int valor;
-
-        sscanf(nombre_valor, "%d", &valor);
-
-        pixelTonVerde(argv, valor);
-    }
-    else if(strncmp(nombre, "recortar=", strlen("recortar=")) == 0)
-    {
-        const char *nombre_valor = nombre + strlen("recortar=");
-        int valor;
-
-        sscanf(nombre_valor, "%d", &valor);
-
-        pixelRecortar(argv, valor);
-    }
+    if(func->normal != NULL)
+        func->normal(argv);
+    else if(func->porc != NULL)
+        func->porc(argv,func->valor);
     else
         printf("Justo esa funcion la hice todavia, proba otra.\n");
 }

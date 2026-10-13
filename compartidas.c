@@ -10,10 +10,10 @@ int imagenCargar(t_imagen *img, const char *nombre)
     img->metadata.ancho = 0;
 
     char direccion[256];
-    snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, nombre);
+    //snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, nombre);
 
     //ABRIMOS EL ARCHIVO.
-    archivo = fopen(direccion, "rb");
+    archivo = fopen(nombre, "rb");
     if(archivo == NULL)
     {
         perror("Ocurrio un error y no se pudo abrir el archivo.");

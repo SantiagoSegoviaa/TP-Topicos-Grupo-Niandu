@@ -17,9 +17,6 @@ void pixelTonRojo(char *argv[], int valor);
 void pixelTonAzul(char *argv[], int valor);
 void pixelTonVerde(char *argv[], int valor);
 void pixelRecortar(char *argv[], int valor);
-void pixelAchicar(char *argv[], int valor);
-void pixelRotarIzq(char *argv[]);
-void pixelRotarDer(char *argv[]);
 
 unsigned char pixelValorContrast(unsigned char valorCanal, double factor);
 

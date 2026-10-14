@@ -12,5 +12,6 @@
 int imagenCargar(t_imagen *img, const char *nombre);
 int imagenGuardar(t_imagen *img, const char *nombre);
 void imagenLiberar(t_imagen *img);
+int imagenCrear(const t_imagen* imgModelo, t_imagen* imgDestino, int alto, int ancho);
 
 #endif // COMPARTIDAS_H_INCLUDED

@@ -9,7 +9,7 @@ int imagenCargar(t_imagen *img, const char *nombre)
     img->metadata.alto = 0;
     img->metadata.ancho = 0;
 
-    char direccion[256];
+    //char direccion[256];
     //snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, nombre);
 
     //ABRIMOS EL ARCHIVO.
@@ -164,5 +164,46 @@ int imagenGuardar(t_imagen *img, const char *nombre)
 
     printf("Se creo el archivo %s correctamente.\n", nombre);
 
+    return 0;
+}
+
+int imagenCrear(const t_imagen* imgOrigen, t_imagen* imgDestino, int alto, int ancho)
+{
+    int padding = (4 - (ancho * sizeof(t_pixel)) % 4) % 4;
+    unsigned int bytesFila = ancho * sizeof(t_pixel) + padding;
+    int filas = abs(alto);
+
+    //copiar encabezado teniendo como base imgOrigen
+    imgDestino->metadata.alto = alto;
+    imgDestino->metadata.ancho = ancho;
+    imgDestino->metadata.profundidad = imgOrigen->metadata.profundidad;
+    imgDestino->metadata.tamEncabezado = imgOrigen->metadata.tamEncabezado;
+    imgDestino->metadata.tamArchivo = imgDestino->metadata.tamEncabezado + bytesFila * alto;
+    imgDestino->metadata.encabezado = malloc(imgOrigen->metadata.tamEncabezado);
+    if(imgDestino->metadata.encabezado == NULL)
+    {
+        printf("Error al duplicar el encabezado.\n");
+        return 1;
+    }
+    memcpy(imgDestino->metadata.encabezado, imgOrigen->metadata.encabezado, imgOrigen->metadata.tamEncabezado);
+
+    //declarar matriz de pixeles
+    imgDestino->pixeles = calloc(filas, sizeof(t_pixel*));
+    if(imgDestino->pixeles == NULL)
+    {
+        imagenLiberar(imgDestino);
+        printf("Error al duplicar el encabezado.\n");
+        return 1;
+    }
+    for(int i = 0; i < filas; i++)
+    {
+        imgDestino->pixeles[i] = malloc(ancho * sizeof(t_pixel));
+        if( imgDestino->pixeles[i] == NULL)
+        {
+            imagenLiberar(imgDestino);
+            printf("Error al duplicar el encabezado.\n");
+            return 1;
+        }
+    }
     return 0;
 }

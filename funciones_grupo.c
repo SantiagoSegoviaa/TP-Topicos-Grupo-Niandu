@@ -12,12 +12,42 @@
     DNI: 44871263
     Entrega: Si
     -----------------
+    Apellido: Paz
+    Nombre: Facundo Bautista
+    DNI: 44641005
+    Entrega: Si
+    -----------------
+	Apellido:
+    Nombre:
+    DNI:
+    Entrega:
+    -----------------
     Apellido:
     Nombre:
     DNI:
     Entrega:
     -----------------
-	Apellido:
+    Apellido:
+    Nombre:
+    DNI:
+    Entrega:
+    -----------------
+    Apellido:
+    Nombre:
+    DNI:
+    Entrega:
+    -----------------
+    Apellido:
+    Nombre:
+    DNI:
+    Entrega:
+    -----------------
+    Apellido:
+    Nombre:
+    DNI:
+    Entrega:
+    -----------------
+    Apellido:
     Nombre:
     DNI:
     Entrega:
@@ -117,7 +147,8 @@ int esModificacion(int argc, char *argv[], int pos, t_funcion_encontrada *func)
     {"--negativo", pixelNegativo},
     {"--escala-de-grises", pixelGrises},
     {"--espejar-horizontal", pixelEspHoriz},
-    {"--espejar-vertical", pixelEspVert}
+    {"--espejar-vertical", pixelEspVert},
+    {"--rotar-derecha", pixelRotarDerecha}
     };
 
     const t_modif_porc *ptr_porc;

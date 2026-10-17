@@ -35,14 +35,14 @@ int solucion(int argc, char* argv[])
     //Validar argumentos minimos: bmpmanipuleitor.exe <funcionalidad> <archivo origen>
     if(argc < ARGUMENTOS_MIN)
     {
-        printf("Argumentos insuficientes\nSintaxis: %s <funcionalidad> <archivo.bmp> <funcionalidad2> ... <funcionalidadN>", argv[0]);
+        printf("Argumentos insuficientes\nSintaxis: %s <funcionalidad> <archivo.bmp> <funcionalidad2> ... <funcionalidadN>", *argv);
         return 1;
     }
 
     //Validar que el tercer argumento sea un archivo .bmp
     if(!esArchivoBMP(argv[POS_ARCHIVO]))
     {
-        printf("El archivo indicado no es un archivo .bmp.\nSintaxis: %s <funcionalidad> <archivo.bmp> <funcionalidad2> ... <funcionalidadN>", argv[0]);
+        printf("El archivo indicado no es un archivo .bmp.\nSintaxis: %s <funcionalidad> <archivo.bmp> <funcionalidad2> ... <funcionalidadN>", *argv);
         return 1;
     }
 
@@ -55,14 +55,14 @@ int solucion(int argc, char* argv[])
     }
 
     //Ejecutamos la funcion que viene con el segundo argumento.
-    ejecutarFuncion(argc, argv[1], argv,&encontrada);
+    ejecutarFuncion(argc, *(argv+1), argv,&encontrada);
 
     //Ejecutamos cada funcion que sigue despues del tercer argumento
     for(int i = 3; i < argc; i++)
     {
         if(esModificacion(argc, argv, i,&encontrada) == VALIDA && !esRepetida(argv, i))
         {
-            ejecutarFuncion(argc, argv[i], argv, &encontrada);
+            ejecutarFuncion(argc, *(argv+i), argv, &encontrada);
         }
     }
 
@@ -72,23 +72,29 @@ int solucion(int argc, char* argv[])
 bool esArchivoBMP(const char *ruta)
 {
     unsigned char firma[2];
-    size_t bytesleidos;
+    size_t bytesleidos_firma;
+    unsigned short profundidad;
+    unsigned int compresion;
     char *inicioformato;
 
     inicioformato = strrchr(ruta, '.');
     if(!inicioformato)
         return false;
 
-    if(strcmp(inicioformato, ".bmp") == 0)
+    if(strcmpi(inicioformato, ".bmp") == 0)
     {
         FILE *archivo = fopen(ruta,"rb");
         if(!archivo)
             return false;
 
-        bytesleidos = fread(firma,1,2,archivo);
+        bytesleidos_firma = fread(firma,1,2,archivo);
+        fseek(archivo, 28, SEEK_SET);
+        fread(&profundidad, 2, 1, archivo);
+        fseek(archivo,30, SEEK_SET);
+        fread(&compresion, 4, 1, archivo);
         fclose(archivo);
 
-        if(bytesleidos!= 2)
+        if(bytesleidos_firma!= 2 || profundidad != 24 || compresion != 0)
             return false;
         if(*firma != 'B' || *(firma+1) != 'M')
             return false;

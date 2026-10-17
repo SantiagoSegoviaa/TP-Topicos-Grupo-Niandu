@@ -35,14 +35,14 @@ int solucion(int argc, char* argv[])
     //Validar argumentos minimos: bmpmanipuleitor.exe <funcionalidad> <archivo origen>
     if(argc < ARGUMENTOS_MIN)
     {
-        printf("Argumentos insuficientes\nSintaxis: %s <funcionalidad> <archivo.bmp> <funcionalidad2> ... <funcionalidadN>", argv[0]);
+        printf("Argumentos insuficientes\nSintaxis: %s <funcionalidad> <archivo.bmp> <funcionalidad2> ... <funcionalidadN>", *argv);
         return 1;
     }
 
     //Validar que el tercer argumento sea un archivo .bmp
     if(!esArchivoBMP(argv[POS_ARCHIVO]))
     {
-        printf("El archivo indicado no es un archivo .bmp.\nSintaxis: %s <funcionalidad> <archivo.bmp> <funcionalidad2> ... <funcionalidadN>", argv[0]);
+        printf("El archivo indicado no es un archivo .bmp.\nSintaxis: %s <funcionalidad> <archivo.bmp> <funcionalidad2> ... <funcionalidadN>", *argv);
         return 1;
     }
 
@@ -55,14 +55,14 @@ int solucion(int argc, char* argv[])
     }
 
     //Ejecutamos la funcion que viene con el segundo argumento.
-    ejecutarFuncion(argc, argv[1], argv,&encontrada);
+    ejecutarFuncion(argc, *(argv+1), argv,&encontrada);
 
     //Ejecutamos cada funcion que sigue despues del tercer argumento
     for(int i = 3; i < argc; i++)
     {
         if(esModificacion(argc, argv, i,&encontrada) == VALIDA && !esRepetida(argv, i))
         {
-            ejecutarFuncion(argc, argv[i], argv, &encontrada);
+            ejecutarFuncion(argc, *(argv+i), argv, &encontrada);
         }
     }
 
@@ -213,9 +213,10 @@ void ejecutarFuncion(int argc, const char *nombre, char *argv[],t_funcion_encont
 
 bool esRepetida(char *argv[], int pos)
 {
-    for(int i = pos - 1; i > 0; i--)
+    int i;
+    for(i = pos - 1; i > 0; i--)
     {
-        if(strcmp(argv[pos], argv[i]) == 0)
+        if(strcmp(*(argv+pos), *(argv+i)) == 0)
             return true;
     }
 

@@ -1,23 +1,53 @@
 /*
-    Integrantes del grupo. En caso de ser un grupo de dos integrantes, no completar el �ltimo campo.
+    Integrantes del grupo. En caso de ser un grupo de dos integrantes, no completar el último campo.
     Si alguno de los integrantes del grupo dejara la materia, completar de todos modos sus datos, aclarando que no entrega.
     -----------------
-    Apellido:
-    Nombre:
-    DNI:
-    Entrega:
+    Apellido: Segovia
+    Nombre: Santiago
+    DNI: 46704508
+    Entrega: Si
     -----------------
-    Apellido:
-    Nombre:
-    DNI:
-    Entrega:
+    Apellido: Diaz
+    Nombre: Juan Pablo
+    DNI: 44871263
+    Entrega: Si
     -----------------
-    Apellido:
-    Nombre:
-    DNI:
-    Entrega:
+    Apellido: Paz
+    Nombre: Facundo Bautista
+    DNI: 44641005
+    Entrega: Si
     -----------------
 	Apellido:
+    Nombre:
+    DNI:
+    Entrega:
+    -----------------
+    Apellido:
+    Nombre:
+    DNI:
+    Entrega:
+    -----------------
+    Apellido:
+    Nombre:
+    DNI:
+    Entrega:
+    -----------------
+    Apellido:
+    Nombre:
+    DNI:
+    Entrega:
+    -----------------
+    Apellido:
+    Nombre:
+    DNI:
+    Entrega:
+    -----------------
+    Apellido:
+    Nombre:
+    DNI:
+    Entrega:
+    -----------------
+    Apellido:
     Nombre:
     DNI:
     Entrega:
@@ -109,7 +139,7 @@ int esModificacion(int argc, char *argv[], int pos, t_funcion_encontrada *func)
 {
     int cant_normales;
     int cant_porc ;
-    int cant_dobl;
+    //int cant_dobl;
 
     const t_modif_normal *ptr_normal;
     const t_modif_normal *fin_normal;
@@ -123,7 +153,8 @@ int esModificacion(int argc, char *argv[], int pos, t_funcion_encontrada *func)
     {"--negativo", pixelNegativo},
     {"--escala-de-grises", pixelGrises},
     {"--espejar-horizontal", pixelEspHoriz},
-    {"--espejar-vertical", pixelEspVert}
+    {"--espejar-vertical", pixelEspVert},
+    {"--rotar-derecha", pixelRotarDerecha}
     };
 
     const t_modif_porc *ptr_porc;
@@ -219,9 +250,10 @@ void ejecutarFuncion(int argc, const char *nombre, char *argv[],t_funcion_encont
 
 bool esRepetida(char *argv[], int pos)
 {
-    for(int i = pos - 1; i > 0; i--)
+    int i;
+    for(i = pos - 1; i > 0; i--)
     {
-        if(strcmp(argv[pos], argv[i]) == 0)
+        if(strcmp(*(argv+pos), *(argv+i)) == 0)
             return true;
     }
 

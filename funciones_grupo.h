@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "funciones_diaz.h"
+#include "funciones_paz.h"
 #include "estructuras.h"
 #define ARGUMENTOS_MIN 3
 
@@ -13,10 +14,9 @@
 #define VALOR_INC 2
 #define FALTA_IMAG 3
 
-#define POS_ARCHIVO 2
 
 /*
-Aquí deben hacer los includes de sus archivos individuales, por ejemplo:
+Aquï¿½ deben hacer los includes de sus archivos individuales, por ejemplo:
 #include "funciones_rufino.h"
  */
 

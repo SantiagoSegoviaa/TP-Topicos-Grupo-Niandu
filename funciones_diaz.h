@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-
-#define POS_ARCHIVO 2
+#include "estructuras.h"
+#include "compartidas.h"
 
 int pixelNegativo(char *argv[]);
 int pixelGrises(char *argv[]);
@@ -18,7 +18,7 @@ int pixelTonAzul(char *argv[], int valor);
 int pixelTonVerde(char *argv[], int valor);
 int pixelRecortar(char *argv[], int valor);
 
-unsigned char pixelValorMasContrast(unsigned char valorCanal, double factor);
+unsigned char pixelValorContrast(unsigned char valorCanal, double factor);
 
 
 #endif // FUNCIONES_DIAZ_H_INCLUDED

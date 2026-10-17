@@ -11,6 +11,7 @@
 				<Option object_output="./" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="--rotar-derecha unlam.bmp" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -31,6 +32,10 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="compartidas.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="compartidas.h" />
 		<Unit filename="estructuras.h" />
 		<Unit filename="funciones_diaz.c">
 			<Option compilerVar="CC" />
@@ -40,6 +45,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="funciones_grupo.h" />
+		<Unit filename="funciones_paz.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="funciones_paz.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -85,14 +85,14 @@ int solucion(int argc, char* argv[])
     }
 
     //Ejecutamos la funcion que viene con el segundo argumento.
-    ejecutarFuncion(argc, *(argv+1), argv,&encontrada);
+    ejecutarFuncion(argc, argv, &encontrada);
 
     //Ejecutamos cada funcion que sigue despues del tercer argumento
     for(int i = 3; i < argc; i++)
     {
         if(esModificacion(argc, argv, i,&encontrada) == VALIDA && !esRepetida(argv, i))
         {
-            ejecutarFuncion(argc, *(argv+i), argv, &encontrada);
+            ejecutarFuncion(argc, argv, &encontrada);
         }
     }
 
@@ -237,7 +237,7 @@ void validarModif(int cod)
     }
 }
 
-void ejecutarFuncion(int argc, const char *nombre, char *argv[],t_funcion_encontrada *func)
+void ejecutarFuncion(int argc, char *argv[], t_funcion_encontrada *func)
 {
 
     if(func->normal != NULL)

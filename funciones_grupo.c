@@ -60,41 +60,115 @@
 int solucion(int argc, char* argv[])
 {
 
-    t_funcion_encontrada encontrada; // ESTRUCTURA DONDE SE GUARDARA LA FUNCION ENCONTRADA Y SU VALOR HALLADO PARA SER EJECUTADA
+    t_funcion_encontrada *encontradas; // ESTRUCTURA DONDE SE GUARDARA LA FUNCION ENCONTRADA Y SU VALOR HALLADO PARA SER EJECUTADA
+    t_funcion_encontrada encontrada;
+    bool hay_funcion = false;
 
-    //Validar argumentos minimos: bmpmanipuleitor.exe <funcionalidad> <archivo origen>
-    if(argc < ARGUMENTOS_MIN)
+    int pos_imagenes[2] = {0, 0}; // ARREGLO QUE GUARDA LA POSICION DE LAS IMAGENES A CONCATENAR
+    int i,cant_encontradas = 0,cod_modif;
+
+    for(i = 1 ; i < argc ; i++)
     {
-        printf("Argumentos insuficientes\nSintaxis: %s <funcionalidad> <archivo.bmp> <funcionalidad2> ... <funcionalidadN>", *argv);
-        return 1;
-    }
-
-    //Validar que el tercer argumento sea un archivo .bmp
-    if(!esArchivoBMP(argv[POS_ARCHIVO]))
-    {
-        printf("El archivo indicado no es un archivo .bmp.\nSintaxis: %s <funcionalidad> <archivo.bmp> <funcionalidad2> ... <funcionalidadN>", *argv);
-        return 1;
-    }
-
-    //Validar que el segundo argumento sea una funcionalidad valida
-    int cod = esModificacion(argc, argv, 1, &encontrada);
-    if(cod != VALIDA)
-    {
-        validarModif(cod);
-        return 1;
-    }
-
-    //Ejecutamos la funcion que viene con el segundo argumento.
-    ejecutarFuncion(argc, argv, &encontrada);
-
-    //Ejecutamos cada funcion que sigue despues del tercer argumento
-    for(int i = 3; i < argc; i++)
-    {
-        if(esModificacion(argc, argv, i,&encontrada) == VALIDA && !esRepetida(argv, i))
+        if(strrchr(*(argv+i), '.') != NULL)
         {
-            ejecutarFuncion(argc, argv, &encontrada);
+            if(!esArchivoBMP(*(argv+i)))
+            {
+                printf("El archivo %s no es un BMP valido.\n", *(argv+i));
+            }
+            else
+            {
+                if(*pos_imagenes == 0)
+                    *pos_imagenes = i;
+                else
+                    *(pos_imagenes+1) = i;
+            }
         }
     }
+    if(*pos_imagenes == 0)
+    {
+        printf("Las imagenes no fueron ingresadas o no fueron validas.\n");
+        return 1;
+    }
+
+    encontradas = (t_funcion_encontrada*)malloc(sizeof(t_funcion_encontrada));
+    if(encontradas == NULL)
+    {
+        printf("Hubo un error y no se pudo reservar memoria.\n");
+        return 1;
+    }   
+
+    for(i = 1 ; i < argc ; i++)
+    {
+        if(!esArchivoBMP(*(argv+i)))    
+        {
+            cod_modif = esModificacion(argc,argv,i,&encontrada);
+            if(cod_modif != VALIDA)
+                validarModif(cod_modif);
+
+            else if(!esRepetida(argv,i))
+            {
+                if(!hay_funcion)
+                {
+                    *encontradas = encontrada;
+                    cant_encontradas++;
+                    hay_funcion = true;
+                }
+                else
+                {
+                    t_funcion_encontrada *temp = (t_funcion_encontrada*)realloc(encontradas, sizeof(t_funcion_encontrada) * (cant_encontradas + 1));
+                    if(temp == NULL)
+                    {
+                        printf("Hubo un error y no se pudo reservar memoria.\n");
+                        free(encontradas);
+                        return 1;   
+                    }
+                    *(temp+cant_encontradas) = encontrada;
+                    encontradas = temp;
+                    cant_encontradas++;
+                }
+            }
+        }
+    }
+
+    if(!hay_funcion)
+    {
+        printf("No se ingresaron funciones validas.\n");
+        free(encontradas);
+        return 1;
+    }
+    else
+    {
+
+        for(i = 0 ; i < cant_encontradas ; i++)
+        {
+            if(*(pos_imagenes+1) != 0)
+            {
+                if((encontradas+i)->dobl != NULL)
+                {
+                    (encontradas+i)->pos1 = *pos_imagenes;
+                    (encontradas+i)->pos2 = *(pos_imagenes+1);
+                    ejecutarFuncion(argv,(encontradas+i));
+                }
+                else
+                {
+                    (encontradas+i)->pos1 = *pos_imagenes;
+                    ejecutarFuncion(argv,(encontradas+i));
+                    (encontradas+i)->pos1 = *(pos_imagenes+1);
+                    ejecutarFuncion(argv,(encontradas+i));
+                }
+            }
+            else if((encontradas+i)->dobl != NULL)
+            {
+                printf("Se salteo una funcion de concatenacion debido a que no se poseen 2 imagenes validas\n");
+            }
+            else
+            {
+                (encontradas+i)->pos1 = *pos_imagenes;
+                ejecutarFuncion(argv,(encontradas+i));
+            }
+        }
+    }
+    free(encontradas);
 
     return 0;
 }
@@ -135,10 +209,11 @@ bool esArchivoBMP(const char *ruta)
     return false;
 }
 
-int esModificacion(int argc, char *argv[], int pos, t_funcion_encontrada *func)
+int esModificacion(char *argv[], int pos, t_funcion_encontrada *func)
 {
     int cant_normales;
-    int cant_porc ;
+    int cant_porc;
+    int cant_dobl;
     //int cant_dobl;
 
     const t_modif_normal *ptr_normal;
@@ -148,6 +223,7 @@ int esModificacion(int argc, char *argv[], int pos, t_funcion_encontrada *func)
 
     func->normal=NULL;
     func->porc=NULL;
+    func->dobl=NULL;
 
     const t_modif_normal funciones_normales[] = {
     {"--negativo", pixelNegativo},
@@ -169,9 +245,18 @@ int esModificacion(int argc, char *argv[], int pos, t_funcion_encontrada *func)
     {"--recortar=",pixelRecortar}
     };
 
+    const t_modif_dobl *ptr_dobl;
+    const t_modif_dobl *fin_dobl;
+
+    const t_modif_dobl func_dobl[] = {
+    {"--concatenar-horizontal",pixelConcatenarHoriz},
+    {"--concatenar-vertical",pixelConcatenarVert}
+    };
+
 
     cant_normales = sizeof(funciones_normales) / sizeof(*funciones_normales);
     cant_porc = sizeof(func_porc) / sizeof(*func_porc);
+    cant_dobl = sizeof(func_dobl) / sizeof(*func_dobl);
 
     //Verificar si es una funcion normal
 
@@ -214,7 +299,15 @@ int esModificacion(int argc, char *argv[], int pos, t_funcion_encontrada *func)
     }
 
     //Verificar si es una funcion que necesita dos imagenes -- TO DO
-
+    fin_dobl = func_dobl + cant_dobl;
+    for(ptr_dobl = func_dobl; ptr_dobl < fin_dobl; ptr_dobl++)
+    {
+        if(strcmp(nombre,ptr_dobl->nombre_funcion)==0)
+        {
+            func->dobl = ptr_dobl->funcion;
+            return VALIDA;
+        }
+    }
 
     return MODIF_INC;
 }
@@ -237,13 +330,15 @@ void validarModif(int cod)
     }
 }
 
-void ejecutarFuncion(int argc, char *argv[], t_funcion_encontrada *func)
+void ejecutarFuncion(char *argv[], t_funcion_encontrada *func)
 {
 
     if(func->normal != NULL)
-        func->normal(argv);
+        func->normal(argv,func->pos1);
     else if(func->porc != NULL)
-        func->porc(argv,func->valor);
+        func->porc(argv,func->valor,func->pos1);
+    else if(func->dobl != NULL)
+        func->dobl(argv,func->pos1,func->pos2);
     else
         printf("Justo esa funcion la hice todavia, proba otra.\n");
 }

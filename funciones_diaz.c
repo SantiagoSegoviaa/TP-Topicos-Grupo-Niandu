@@ -1,10 +1,10 @@
 #include "funciones_diaz.h"
 
-int pixelNegativo(char *argv[])
+int pixelNegativo(char *argv[], int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0) //Devuelve 0 si cargo la imagen correctamente, sino devuelve cualquier otro numero.
+    if(imagenCargar(&img, argv[pos]) != 0) //Devuelve 0 si cargo la imagen correctamente, sino devuelve cualquier otro numero.
     {
         return 1;
     }
@@ -34,7 +34,7 @@ int pixelNegativo(char *argv[])
 
     strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
     strcat(nombre_archivo_nuevo, "negativo_");
-    strcat(nombre_archivo_nuevo, argv[POS_ARCHIVO]);
+    strcat(nombre_archivo_nuevo, argv[pos]);
 
     //Cargamos la matriz a un archivo nuevo.
     if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)//Devuelve 0 si guarda correctamente la imagen, sino devuelve otro valor
@@ -49,11 +49,11 @@ int pixelNegativo(char *argv[])
     return 0;
 }
 
-int pixelGrises(char *argv[])
+int pixelGrises(char *argv[], int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
+    if(imagenCargar(&img, argv[pos]) != 0)
     {
         return 1;
     }
@@ -87,7 +87,7 @@ int pixelGrises(char *argv[])
 
     strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
     strcat(nombre_archivo_nuevo, "escala-de-grises_");
-    strcat(nombre_archivo_nuevo, argv[POS_ARCHIVO]);
+    strcat(nombre_archivo_nuevo, argv[pos]);
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
@@ -102,11 +102,11 @@ int pixelGrises(char *argv[])
     return 0;
 }
 
-int pixelEspHoriz(char* argv[])
+int pixelEspHoriz(char* argv[], int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
+    if(imagenCargar(&img, argv[pos]) != 0)
     {
         return 1;
     }
@@ -137,7 +137,7 @@ int pixelEspHoriz(char* argv[])
 
     strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
     strcat(nombre_archivo_nuevo, "espejar-horizontal_");
-    strcat(nombre_archivo_nuevo, argv[POS_ARCHIVO]);
+    strcat(nombre_archivo_nuevo, argv[pos]);
 
 
     //Creamos el archivo nuevo para cargar la matriz modificada
@@ -153,11 +153,11 @@ int pixelEspHoriz(char* argv[])
     return 0;
 }
 
-int pixelEspVert(char* argv[])
+int pixelEspVert(char* argv[], int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
+    if(imagenCargar(&img, argv[pos]) != 0)
     {
         return 1;
     }
@@ -187,7 +187,7 @@ int pixelEspVert(char* argv[])
 
     strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
     strcat(nombre_archivo_nuevo, "espejar-vertical_");
-    strcat(nombre_archivo_nuevo, argv[POS_ARCHIVO]);
+    strcat(nombre_archivo_nuevo, argv[pos]);
 
 
     //Creamos el archivo nuevo para cargar la matriz modificada
@@ -203,11 +203,11 @@ int pixelEspVert(char* argv[])
     return 0;
 }
 
-int pixelMasContrast(char *argv[], int valor)
+int pixelMasContrast(char *argv[], int valor, int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
+    if(imagenCargar(&img, argv[pos]) != 0)
     {
         return 1;
     }
@@ -241,7 +241,7 @@ int pixelMasContrast(char *argv[], int valor)
     strcat(nombre_archivo_nuevo, "aumentar-contraste=");
     strcat(nombre_archivo_nuevo, num_buff);
     strcat(nombre_archivo_nuevo, "_");
-    strcat(nombre_archivo_nuevo, argv[POS_ARCHIVO]);
+    strcat(nombre_archivo_nuevo, argv[pos]);
 
 
     //Creamos el archivo nuevo para cargar la matriz modificada
@@ -257,11 +257,11 @@ int pixelMasContrast(char *argv[], int valor)
     return 0;
 }
 
-int pixelMenosContrast(char* argv[], int valor)
+int pixelMenosContrast(char* argv[], int valor, int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
+    if(imagenCargar(&img, argv[pos]) != 0)
     {
         return 1;
     }
@@ -295,7 +295,7 @@ int pixelMenosContrast(char* argv[], int valor)
     strcat(nombre_archivo_nuevo, "reducir-contraste=");
     strcat(nombre_archivo_nuevo, num_buff);
     strcat(nombre_archivo_nuevo, "_");
-    strcat(nombre_archivo_nuevo, argv[POS_ARCHIVO]);
+    strcat(nombre_archivo_nuevo, argv[pos]);
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
@@ -324,11 +324,11 @@ unsigned char pixelValorContrast(unsigned char valorCanal, double factor)
     return (unsigned char)valorNuevo;
 }
 
-int pixelTonRojo(char *argv[], int valor)
+int pixelTonRojo(char *argv[], int valor, int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
+    if(imagenCargar(&img, argv[pos]) != 0)
     {
         return 1;
     }
@@ -364,7 +364,7 @@ int pixelTonRojo(char *argv[], int valor)
     strcat(nombre_archivo_nuevo, "tonalidad-roja=");
     strcat(nombre_archivo_nuevo, num_buff);
     strcat(nombre_archivo_nuevo, "_");
-    strcat(nombre_archivo_nuevo, argv[POS_ARCHIVO]);
+    strcat(nombre_archivo_nuevo, argv[pos]);
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
@@ -379,11 +379,11 @@ int pixelTonRojo(char *argv[], int valor)
     return 0;
 }
 
-int pixelTonAzul(char *argv[], int valor)
+int pixelTonAzul(char *argv[], int valor, int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
+    if(imagenCargar(&img, argv[pos]) != 0)
     {
         return 1;
     }
@@ -419,7 +419,7 @@ int pixelTonAzul(char *argv[], int valor)
     strcat(nombre_archivo_nuevo, "tonalidad-azul=");
     strcat(nombre_archivo_nuevo, num_buff);
     strcat(nombre_archivo_nuevo, "_");
-    strcat(nombre_archivo_nuevo, argv[POS_ARCHIVO]);
+    strcat(nombre_archivo_nuevo, argv[pos]);
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
@@ -434,11 +434,11 @@ int pixelTonAzul(char *argv[], int valor)
     return 0;
 }
 
-int pixelTonVerde(char *argv[], int valor)
+int pixelTonVerde(char *argv[], int valor, int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
+    if(imagenCargar(&img, argv[pos]) != 0)
     {
         return 1;
     }
@@ -474,7 +474,7 @@ int pixelTonVerde(char *argv[], int valor)
     strcat(nombre_archivo_nuevo, "tonalidad-verde=");
     strcat(nombre_archivo_nuevo, num_buff);
     strcat(nombre_archivo_nuevo, "_");
-    strcat(nombre_archivo_nuevo, argv[POS_ARCHIVO]);
+    strcat(nombre_archivo_nuevo, argv[pos]);
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
@@ -489,12 +489,12 @@ int pixelTonVerde(char *argv[], int valor)
     return 0;
 }
 
-int pixelRecortar(char *argv[], int valor)
+int pixelRecortar(char *argv[], int valor, int pos)
 {
     t_imagen img;
     t_imagen imgRecorte;
 
-    if(imagenCargar(&img, argv[POS_ARCHIVO]) != 0)
+    if(imagenCargar(&img, argv[pos]) != 0)
     {
         return 1;
     }
@@ -573,7 +573,7 @@ int pixelRecortar(char *argv[], int valor)
     strcat(nombre_archivo_nuevo, "recortar=");
     strcat(nombre_archivo_nuevo, num_buff);
     strcat(nombre_archivo_nuevo, "_");
-    strcat(nombre_archivo_nuevo, argv[POS_ARCHIVO]);
+    strcat(nombre_archivo_nuevo, argv[pos]);
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 

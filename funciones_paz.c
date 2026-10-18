@@ -1,11 +1,11 @@
 #include "funciones_paz.h"
 
-int pixelRotarDerecha (char* argv[])
+int pixelRotarDerecha (char* argv[], int pos)
 {
     t_imagen imgOriginal;
     t_imagen imgNueva;
 
-    if( imagenCargar(&imgOriginal, argv[POS_ARCHIVO]) != 0)
+    if( imagenCargar(&imgOriginal, argv[pos]) != 0)
     {
         printf("Error al cargar el arcivo en funcion rotar-derecha.\n");
         return 1;
@@ -31,7 +31,7 @@ int pixelRotarDerecha (char* argv[])
     char nombre_archivo_nuevo[256];
     strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
     strcat(nombre_archivo_nuevo, "rotar-derecha_");
-    strcat(nombre_archivo_nuevo, argv[POS_ARCHIVO]);
+    strcat(nombre_archivo_nuevo, argv[pos]);
 
     //crear archivo
     imagenGuardar(&imgNueva, nombre_archivo_nuevo);

@@ -1,7 +1,7 @@
 #ifndef ESTRUCTURAS_H_INCLUDED
 #define ESTRUCTURAS_H_INCLUDED
 
-#define NOMBRE_GRUPO "Niandu_"
+#define NOMBRE_GRUPO "NIANDU_"
 
 // Estructura sugerida, su uso es opcional.
 typedef struct
@@ -29,10 +29,11 @@ typedef struct
     t_pixel **pixeles;
 }t_imagen;
 
-typedef int (*t_func_normal)(char *argv[]);
+typedef int (*t_func_normal)(char *argv[], int pos);
 
-typedef int (*t_func_porc)(char *argv[], int valor);
+typedef int (*t_func_porc)(char *argv[], int valor, int pos);
 
+typedef int (*t_func_dobl)(char *argv[], int pos1, int pos2);
 typedef struct
 {
     const char* nombre_funcion;
@@ -49,9 +50,19 @@ typedef struct
 
 typedef struct
 {
+    const char* nombre_funcion;
+    const t_func_dobl funcion;
+
+}t_modif_dobl;
+typedef struct
+{
+    char *nombre;
     t_func_normal normal;
     t_func_porc porc;
+    t_func_dobl dobl;
     int valor;
+    int pos1;
+    int pos2;   
 
 }t_funcion_encontrada;
 

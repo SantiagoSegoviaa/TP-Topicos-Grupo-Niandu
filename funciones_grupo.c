@@ -3,7 +3,7 @@
     Si alguno de los integrantes del grupo dejara la materia, completar de todos modos sus datos, aclarando que no entrega.
     -----------------
     Apellido: Segovia
-    Nombre: Santiago
+    Nombre: Santiago Ezequiel
     DNI: 46704508
     Entrega: Si
     -----------------
@@ -60,27 +60,30 @@
 int solucion(int argc, char* argv[])
 {
 
-    t_funcion_encontrada *encontradas; // ESTRUCTURA DONDE SE GUARDARA LA FUNCION ENCONTRADA Y SU VALOR HALLADO PARA SER EJECUTADA
-    t_funcion_encontrada encontrada;
+    t_funcion_encontrada *encontradas; //ARRAY DE ESTRUCTURAS DONDE SE GUARDARAN LAS FUNCIONES ENCONTRADAS Y SU VALOR HALLADO PARA SER EJECUTADAS
+    t_funcion_encontrada encontrada; // ESTRUCTURA DONDE SE GUARDARA LA FUNCION ENCONTRADA Y SU VALOR HALLADO PARA SER EJECUTADA
     bool hay_funcion = false;
 
-    int pos_imagenes[2] = {0, 0}; // ARREGLO QUE GUARDA LA POSICION DE LAS IMAGENES A CONCATENAR
-    int i,cant_encontradas = 0,cod_modif;
+    int pos_imagenes[2] = {0, 0}; // ARREGLO QUE GUARDA LA POSICION DE LAS IMAGENES A CONCATENAR O PROCESAR
+    int i,cant_encontradas = 0,cod;
 
     for(i = 1 ; i < argc ; i++)
     {
-        if(strrchr(*(argv+i), '.') != NULL)
+        if(TieneExtensionBMP(*(argv+i)))
         {
-            if(!esArchivoBMP(*(argv+i)))
-            {
-                printf("El archivo %s no es un BMP valido.\n", *(argv+i));
-            }
+            cod = esArchivoBMP(*(argv+i));
+            if(cod != OK)
+                informarError(cod, *(argv+i));
             else
             {
                 if(*pos_imagenes == 0)
                     *pos_imagenes = i;
-                else
+                else if(*(pos_imagenes+1) == 0)
+                {
                     *(pos_imagenes+1) = i;
+                }
+                else
+                    informarError(ERR_IMAGEN_EXTRA, *(argv+i));
             }
         }
     }
@@ -93,17 +96,17 @@ int solucion(int argc, char* argv[])
     encontradas = (t_funcion_encontrada*)malloc(sizeof(t_funcion_encontrada));
     if(encontradas == NULL)
     {
-        printf("Hubo un error y no se pudo reservar memoria.\n");
+        informarError(ERR_MEMORIA, NULL);
         return 1;
-    }   
+    }
 
     for(i = 1 ; i < argc ; i++)
     {
-        if(!esArchivoBMP(*(argv+i)))    
+        if(!TieneExtensionBMP(*(argv+i)))
         {
-            cod_modif = esModificacion(argv,i,&encontrada);
-            if(cod_modif != VALIDA)
-                validarModif(cod_modif);
+            cod = esModificacion(argv,i,&encontrada);
+            if(cod != OK)
+                informarError(cod, *(argv+i));
 
             else if(!esRepetida(argv,i))
             {
@@ -118,9 +121,9 @@ int solucion(int argc, char* argv[])
                     t_funcion_encontrada *temp = (t_funcion_encontrada*)realloc(encontradas, sizeof(t_funcion_encontrada) * (cant_encontradas + 1));
                     if(temp == NULL)
                     {
-                        printf("Hubo un error y no se pudo reservar memoria.\n");
+                        informarError(ERR_MEMORIA, NULL);
                         free(encontradas);
-                        return 1;   
+                        return 1;
                     }
                     *(temp+cant_encontradas) = encontrada;
                     encontradas = temp;
@@ -132,7 +135,7 @@ int solucion(int argc, char* argv[])
 
     if(!hay_funcion)
     {
-        printf("No se ingresaron funciones validas.\n");
+        printf("No se encontraron funciones validas para ejecutar.\n");
         free(encontradas);
         return 1;
     }
@@ -159,7 +162,7 @@ int solucion(int argc, char* argv[])
             }
             else if((encontradas+i)->dobl != NULL)
             {
-                printf("Se salteo una funcion de concatenacion debido a que no se poseen 2 imagenes validas\n");
+                informarError(ERR_FALTA_IMAG, "Funcion de concatenacion");
             }
             else
             {
@@ -172,41 +175,41 @@ int solucion(int argc, char* argv[])
 
     return 0;
 }
+int TieneExtensionBMP(const char *ruta)
+{
+    char *inicioformato;
 
-bool esArchivoBMP(const char *ruta)
+    inicioformato = strrchr(ruta, '.');
+
+    return inicioformato != NULL && strcmpi(inicioformato, ".bmp") == 0;
+}
+
+int esArchivoBMP(const char *ruta)
 {
     unsigned char firma[2];
     size_t bytesleidos_firma;
     unsigned short profundidad;
     unsigned int compresion;
-    char *inicioformato;
 
-    inicioformato = strrchr(ruta, '.');
-    if(!inicioformato)
-        return false;
 
-    if(strcmpi(inicioformato, ".bmp") == 0)
-    {
-        FILE *archivo = fopen(ruta,"rb");
-        if(!archivo)
-            return false;
+    FILE *archivo = fopen(ruta,"rb");
+    if(!archivo)
+        return ERR_NO_EXISTE;
 
-        bytesleidos_firma = fread(firma,1,2,archivo);
-        fseek(archivo, 28, SEEK_SET);
-        fread(&profundidad, 2, 1, archivo);
-        fseek(archivo,30, SEEK_SET);
-        fread(&compresion, 4, 1, archivo);
-        fclose(archivo);
+    bytesleidos_firma = fread(firma,1,2,archivo);
+    fseek(archivo, 28, SEEK_SET);
+    fread(&profundidad, 2, 1, archivo);
+    fseek(archivo,30, SEEK_SET);
+    fread(&compresion, 4, 1, archivo);
+    fclose(archivo);
 
-        if(bytesleidos_firma!= 2 || profundidad != 24 || compresion != 0)
-            return false;
-        if(*firma != 'B' || *(firma+1) != 'M')
-            return false;
+    if(bytesleidos_firma!= 2 || profundidad != 24 || compresion != 0)
+        return ERR_PROFUNDIDAD;
+    if(*firma != 'B' || *(firma+1) != 'M')
+        return ERR_NO_ES_BMP;
 
-        return true;
-    }
+    return OK;
 
-    return false;
 }
 
 int esModificacion(char *argv[], int pos, t_funcion_encontrada *func)
@@ -267,7 +270,7 @@ int esModificacion(char *argv[], int pos, t_funcion_encontrada *func)
         if(strcmp(nombre,ptr_normal->nombre_funcion)==0)
         {
             func->normal = ptr_normal->funcion;
-            return VALIDA;
+            return OK;
         }
     }
 
@@ -291,10 +294,10 @@ int esModificacion(char *argv[], int pos, t_funcion_encontrada *func)
             {
                 func->porc = ptr_porc->funcion;
                 func->valor = valor;
-                return VALIDA;
+                return OK;
             }
             else
-                return VALOR_INC;
+                return ERR_VALOR_INC;
         }
     }
 
@@ -305,31 +308,56 @@ int esModificacion(char *argv[], int pos, t_funcion_encontrada *func)
         if(strcmp(nombre,ptr_dobl->nombre_funcion)==0)
         {
             func->dobl = ptr_dobl->funcion;
-            return VALIDA;
+            return OK;
         }
     }
 
-    return MODIF_INC;
+    return ERR_MODIF_INC;
 }
 
-void validarModif(int cod)
+void informarError(int cod, const char *arg)
 {
     switch(cod)
     {
-    case MODIF_INC:
-        printf("La modificacion que ingresaste no existe.\n");
+    case ERR_NO_EXISTE:
+        printf("\"%s\": el archivo no existe.\n", arg);
         break;
 
-    case VALOR_INC:
-        printf("Solo se pueden ingresar valores entre 0 y 100.\n");
+    case ERR_NO_ES_BMP:
+        printf("\"%s\": no es un archivo BMP.\n", arg);
         break;
 
-    case FALTA_IMAG:
-        printf("Para usar la funcion concatenar se necesitan de dos imagenes.\n");
+    case ERR_PROFUNDIDAD:
+        printf("\"%s\": no es de 24 bits.\n", arg);
+        break;
+
+    case ERR_COMPRESION:
+        printf("\"%s\": tiene compresion, no se soporta.\n", arg);
+        break;
+
+    case ERR_MODIF_INC:
+        printf("\"%s\": la modificacion no existe.\n", arg);
+        break;
+
+    case ERR_VALOR_INC:
+        printf("\"%s\": el valor debe estar entre 0 y 100.\n", arg);
+        break;
+
+    case ERR_FALTA_IMAG:
+        printf("\"%s\": se necesitan 2 imagenes validas.\n", arg);
+        break;
+
+    case ERR_EJECUCION:
+        printf("\"%s\": no se pudo aplicar.\n", arg);
+        break;
+    case ERR_MEMORIA:
+        printf("Hubo un error y no se pudo reservar memoria.\n");
+        break;
+    case ERR_IMAGEN_EXTRA:
+        printf("\"%s\": se ingresaron mas de 2 imagenes validas, se procesaran las primeras 2.\n", arg);
         break;
     }
 }
-
 void ejecutarFuncion(char *argv[], t_funcion_encontrada *func)
 {
 
@@ -339,8 +367,6 @@ void ejecutarFuncion(char *argv[], t_funcion_encontrada *func)
         func->porc(argv,func->valor,func->pos1);
     else if(func->dobl != NULL)
         func->dobl(argv,func->pos1,func->pos2);
-    else
-        printf("Justo esa funcion la hice todavia, proba otra.\n");
 }
 
 bool esRepetida(char *argv[], int pos)

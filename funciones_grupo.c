@@ -101,7 +101,7 @@ int solucion(int argc, char* argv[])
     {
         if(!esArchivoBMP(*(argv+i)))    
         {
-            cod_modif = esModificacion(argc,argv,i,&encontrada);
+            cod_modif = esModificacion(argv,i,&encontrada);
             if(cod_modif != VALIDA)
                 validarModif(cod_modif);
 

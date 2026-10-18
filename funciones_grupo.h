@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include "funciones_diaz.h"
 #include "funciones_paz.h"
+#include "funciones_segovia.h"
 #include "estructuras.h"
 #define ARGUMENTOS_MIN 3
 

@@ -34,6 +34,7 @@ typedef int (*t_func_normal)(char *argv[], int pos);
 typedef int (*t_func_porc)(char *argv[], int valor, int pos);
 
 typedef int (*t_func_dobl)(char *argv[], int pos1, int pos2);
+
 typedef struct
 {
     const char* nombre_funcion;
@@ -54,6 +55,7 @@ typedef struct
     const t_func_dobl funcion;
 
 }t_modif_dobl;
+
 typedef struct
 {
     char *nombre;

@@ -17,7 +17,7 @@
     DNI: 44641005
     Entrega: Si
     -----------------
-	Apellido:Lara
+	Apellido: Lara
     Nombre: Tomas Vladimir
     DNI: 45 612 200
     Entrega: Si
@@ -175,6 +175,7 @@ int solucion(int argc, char* argv[])
 
     return 0;
 }
+
 int TieneExtensionBMP(const char *ruta)
 {
     char *inicioformato;
@@ -358,6 +359,7 @@ void informarError(int cod, const char *arg)
         break;
     }
 }
+
 void ejecutarFuncion(char *argv[], t_funcion_encontrada *func)
 {
 

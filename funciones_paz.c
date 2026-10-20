@@ -11,14 +11,12 @@ int pixelRotarDerecha (char* argv[], int pos)
         return 1;
     }
 
-    //crear una copia teniendo como base para el encabezado la original
     imagenCrear( &imgOriginal, &imgNueva, imgOriginal.metadata.ancho, imgOriginal.metadata.alto);
 
-    //ajustes de resolucion vertical y horizontal
     memcpy(imgNueva.metadata.encabezado + 38, imgOriginal.metadata.encabezado + 42,sizeof(int));
     memcpy(imgNueva.metadata.encabezado + 42, imgOriginal.metadata.encabezado + 38,sizeof(int));
 
-    //rotar derecha
+
     for( int i = 0; i < abs(imgOriginal.metadata.alto); i++)
     {
         for( int j = 0; j < abs(imgOriginal.metadata.ancho); j++)
@@ -27,18 +25,16 @@ int pixelRotarDerecha (char* argv[], int pos)
         }
     }
 
-    //crear nombre para el nuevo archivo
     char nombre_archivo_nuevo[256];
     strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
     strcat(nombre_archivo_nuevo, "rotar-derecha_");
     strcat(nombre_archivo_nuevo, argv[pos]);
 
-    //crear archivo
     imagenGuardar(&imgNueva, nombre_archivo_nuevo);
 
-    //liberar recursos usados
     imagenLiberar(&imgNueva);
     imagenLiberar(&imgOriginal);
 
     return 0;
 }
+

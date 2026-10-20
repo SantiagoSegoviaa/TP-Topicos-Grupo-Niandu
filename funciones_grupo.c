@@ -17,10 +17,10 @@
     DNI: 44641005
     Entrega: Si
     -----------------
-	Apellido:
-    Nombre:
-    DNI:
-    Entrega:
+	Apellido:Lara
+    Nombre: Tomas Vladimir
+    DNI: 45 612 200
+    Entrega: Si
     -----------------
     Apellido:
     Nombre:

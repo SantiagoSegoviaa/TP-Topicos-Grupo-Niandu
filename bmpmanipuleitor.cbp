@@ -44,10 +44,18 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="funciones_grupo.h" />
+		<Unit filename="funciones_lara.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="funciones_lara.h" />
 		<Unit filename="funciones_paz.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="funciones_paz.h" />
+		<Unit filename="funciones_segovia.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="funciones_segovia.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

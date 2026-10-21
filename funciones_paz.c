@@ -11,10 +11,15 @@ int pixelRotarDerecha (char* argv[], int pos)
         return 1;
     }
 
-    imagenCrear( &imgOriginal, &imgNueva, imgOriginal.metadata.ancho, imgOriginal.metadata.alto);
+    if(imagenCrear( &imgOriginal, &imgNueva, imgOriginal.metadata.ancho, imgOriginal.metadata.alto) != 0)
+    {
+        printf("Error al cargar el arcivo en funcion rotar-derecha.\n");
+        imagenLiberar(&imgOriginal);
+        return 1;
+    }
 
-    memcpy(imgNueva.metadata.encabezado + 38, imgOriginal.metadata.encabezado + 42,sizeof(int));
-    memcpy(imgNueva.metadata.encabezado + 42, imgOriginal.metadata.encabezado + 38,sizeof(int));
+    memcpy(imgNueva.metadata.encabezado + 38, imgOriginal.metadata.encabezado + 42,sizeof(int)); //asigno resolucion vertical vieja a resolucion horizontal nueva
+    memcpy(imgNueva.metadata.encabezado + 42, imgOriginal.metadata.encabezado + 38,sizeof(int)); //asigno resolucion horizontal vieja a resolucion vertical nueva
 
 
     for( int i = 0; i < abs(imgOriginal.metadata.alto); i++)

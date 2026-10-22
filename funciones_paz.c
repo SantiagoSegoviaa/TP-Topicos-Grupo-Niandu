@@ -5,13 +5,17 @@ int pixelRotarDerecha (char* argv[], int pos)
     t_imagen imgOriginal;
     t_imagen imgNueva;
 
-    if( imagenCargar(&imgOriginal, argv[pos]) != 0)
+    if( ImagenCargar(&imgOriginal, argv[pos]) != 0)
     {
         printf("Error al cargar el arcivo en funcion rotar-derecha.\n");
-        return 1;
+        return ERR_EJECUCION;
     }
 
-    imagenCrear( &imgOriginal, &imgNueva, imgOriginal.metadata.ancho, imgOriginal.metadata.alto);
+    if(ImagenCrear( &imgOriginal, &imgNueva, imgOriginal.metadata.ancho, imgOriginal.metadata.alto) != 0)
+    {
+        ImagenLiberar(&imgOriginal);
+        return ERR_MEMORIA;
+    }
 
     memcpy(imgNueva.metadata.encabezado + 38, imgOriginal.metadata.encabezado + 42,sizeof(int));
     memcpy(imgNueva.metadata.encabezado + 42, imgOriginal.metadata.encabezado + 38,sizeof(int));
@@ -25,16 +29,25 @@ int pixelRotarDerecha (char* argv[], int pos)
         }
     }
 
-    char nombre_archivo_nuevo[256];
-    strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
-    strcat(nombre_archivo_nuevo, "rotar-derecha_");
-    strcat(nombre_archivo_nuevo, argv[pos]);
+    char nombre_archivo_nuevo[TAM_RUTA];
 
-    imagenGuardar(&imgNueva, nombre_archivo_nuevo);
+    if(GeneraRuta(argv[pos], "rotar-derecha_", nombre_archivo_nuevo) != OK)
+    {
+        ImagenLiberar(&imgNueva);
+        ImagenLiberar(&imgOriginal);
+        return ERR_EJECUCION;
+    }
 
-    imagenLiberar(&imgNueva);
-    imagenLiberar(&imgOriginal);
+    if(ImagenGuardar(&imgNueva, nombre_archivo_nuevo) != 0)
+    {
+        ImagenLiberar(&imgNueva);
+        ImagenLiberar(&imgOriginal);
+        return ERR_EJECUCION;
+    }
 
-    return 0;
+    ImagenLiberar(&imgNueva);
+    ImagenLiberar(&imgOriginal);
+
+    return OK;
 }
 

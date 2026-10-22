@@ -1,6 +1,6 @@
-#include "compartidas.h"
+#include "compartido.h"
 
-int imagenCargar(t_imagen *img, const char *nombre)
+int ImagenCargar(t_imagen *img, const char *nombre)
 {
     FILE *archivo;
 
@@ -9,10 +9,6 @@ int imagenCargar(t_imagen *img, const char *nombre)
     img->metadata.alto = 0;
     img->metadata.ancho = 0;
 
-    //char direccion[256];
-    //snprintf(direccion, sizeof(direccion), "%s/%s", SUBCARPETA, nombre);
-
-    //ABRIMOS EL ARCHIVO.
     archivo = fopen(nombre, "rb");
     if(archivo == NULL)
     {
@@ -90,11 +86,11 @@ int imagenCargar(t_imagen *img, const char *nombre)
 
     error:
         fclose(archivo);
-        imagenLiberar(img);
+        ImagenLiberar(img);
         return 1;
 }
 
-void imagenLiberar(t_imagen *img)
+void ImagenLiberar(t_imagen *img)
 {
     if(img->pixeles != NULL)
     {
@@ -112,7 +108,7 @@ void imagenLiberar(t_imagen *img)
     img->pixeles = NULL;
 }
 
-int imagenGuardar(t_imagen *img, const char *nombre)
+int ImagenGuardar(t_imagen *img, const char *nombre)
 {
     FILE *archivo_nuevo;
 
@@ -167,7 +163,7 @@ int imagenGuardar(t_imagen *img, const char *nombre)
     return 0;
 }
 
-int imagenCrear(const t_imagen* imgOrigen, t_imagen* imgDestino, int alto, int ancho)
+int ImagenCrear(const t_imagen* imgOrigen, t_imagen* imgDestino, int alto, int ancho)
 {
     int padding = (4 - (ancho * sizeof(t_pixel)) % 4) % 4;
     unsigned int bytesFila = ancho * sizeof(t_pixel) + padding;
@@ -191,7 +187,7 @@ int imagenCrear(const t_imagen* imgOrigen, t_imagen* imgDestino, int alto, int a
     imgDestino->pixeles = calloc(filas, sizeof(t_pixel*));
     if(imgDestino->pixeles == NULL)
     {
-        imagenLiberar(imgDestino);
+        ImagenLiberar(imgDestino);
         printf("Error al duplicar el encabezado.\n");
         return 1;
     }
@@ -200,10 +196,52 @@ int imagenCrear(const t_imagen* imgOrigen, t_imagen* imgDestino, int alto, int a
         imgDestino->pixeles[i] = malloc(ancho * sizeof(t_pixel));
         if( imgDestino->pixeles[i] == NULL)
         {
-            imagenLiberar(imgDestino);
+            ImagenLiberar(imgDestino);
             printf("Error al duplicar el encabezado.\n");
             return 1;
         }
     }
     return 0;
+}
+
+int GeneraRuta(const char *ruta, const char* operacion, char *destino){
+
+    char nombre[TAM_RUTA];
+    char *p;
+    char *sep=NULL;
+
+
+    if(ruta == NULL || operacion == NULL || destino == NULL)
+        return ERR_EJECUCION;
+
+    if(strlen(NOMBRE_GRUPO) + strlen(operacion) + strlen(ruta) + 1 > TAM_RUTA)
+        return ERR_EJECUCION;
+        
+    if((p = strrchr(ruta,'\\')) != NULL) // C:\Dev\imagenes\unlam.bmp
+        sep = p;
+    if((p = strrchr(ruta,'/')) != NULL && (sep == NULL || p > sep))
+        sep = p;
+    if((p = strrchr(ruta,':')) != NULL && (sep == NULL || p > sep))
+        sep = p;
+
+    if(sep == NULL)
+    {
+        strcpy(destino,NOMBRE_GRUPO);
+        strcat(destino,operacion);
+        strcat(destino,ruta);
+        return OK;
+    }
+    else
+    {
+        strcpy(nombre,NOMBRE_GRUPO);
+        strcat(nombre,operacion);
+        strcat(nombre,(sep+1));
+
+        strncpy(destino,ruta,(sep-ruta+1));
+        *(destino+(sep - ruta + 1)) = '\0';
+        strcat(destino,nombre);
+        return OK;
+    }
+
+
 }

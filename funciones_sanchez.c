@@ -1,0 +1,80 @@
+#include "funciones_sanchez.h"
+
+static const t_pixel relleno = {0, 165, 255};
+
+static int filaReal(const t_imagen *img, int filaVisual)
+{
+    int alto = abs(img->metadata.alto);
+
+    if(img->metadata.alto > 0)
+        return alto - 1 - filaVisual;
+
+    return filaVisual;
+}
+
+int pixelConcatenarHoriz(char *argv[], int pos1, int pos2)
+{
+    t_imagen img1;
+    t_imagen img2;
+    t_imagen nueva;
+    char nombre_archivo_nuevo[TAM_RUTA];
+
+    if(ImagenCargar(&img1, argv[pos1]) != 0)
+        return ERR_EJECUCION;
+
+    if(ImagenCargar(&img2, argv[pos2]) != 0)
+    {
+        ImagenLiberar(&img1);
+        return ERR_EJECUCION;
+    }
+
+    int alto1 = abs(img1.metadata.alto);
+    int alto2 = abs(img2.metadata.alto);
+    int ancho1 = img1.metadata.ancho;
+    int ancho2 = img2.metadata.ancho;
+
+    int altoMax = (alto1 > alto2) ? alto1 : alto2;
+    int anchoTotal = ancho1 + ancho2;
+    int altoFinal = (img1.metadata.alto > 0) ? altoMax : -altoMax;
+
+    if(ImagenCrear(&img1, &nueva, altoFinal, anchoTotal) != 0)
+    {
+        ImagenLiberar(&img1);
+        ImagenLiberar(&img2);
+        return ERR_MEMORIA;
+    }
+
+    for(int v = 0; v < altoMax; v++)
+    {
+        int yNueva = filaReal(&nueva, v);
+
+        for(int x = 0; x < ancho1; x++)
+        {
+            if(v < alto1)
+                nueva.pixeles[yNueva][x] = img1.pixeles[filaReal(&img1, v)][x];
+            else
+                nueva.pixeles[yNueva][x] = relleno;
+        }
+
+        for(int x = 0; x < ancho2; x++)
+        {
+            if(v < alto2)
+                nueva.pixeles[yNueva][ancho1 + x] = img2.pixeles[filaReal(&img2, v)][x];
+            else
+                nueva.pixeles[yNueva][ancho1 + x] = relleno;
+        }
+    }
+
+    int resultado = OK;
+
+    if(GeneraRuta(argv[pos1], "concatenar-horizontal_", nombre_archivo_nuevo) != OK)
+        resultado = ERR_EJECUCION;
+    else if(ImagenGuardar(&nueva, nombre_archivo_nuevo) != 0)
+        resultado = ERR_EJECUCION;
+
+    ImagenLiberar(&nueva);
+    ImagenLiberar(&img1);
+    ImagenLiberar(&img2);
+
+    return resultado;
+}

@@ -223,7 +223,7 @@ int esModificacion(char *argv[], int pos, t_funcion_encontrada *func)
     const t_modif_normal *ptr_normal;
     const t_modif_normal *fin_normal;
 
-    const char *nombre = *(argv+pos);
+    char *nombre = *(argv+pos);
 
     func->normal=NULL;
     func->porc=NULL;
@@ -234,7 +234,8 @@ int esModificacion(char *argv[], int pos, t_funcion_encontrada *func)
     {"--escala-de-grises", pixelGrises},
     {"--espejar-horizontal", pixelEspHoriz},
     {"--espejar-vertical", pixelEspVert},
-    {"--rotar-derecha", pixelRotarDerecha}
+    {"--rotar-derecha", pixelRotarDerecha},
+    {"--rotar-izquierda", pixelRotarIzquierda}
     };
 
     const t_modif_porc *ptr_porc;
@@ -271,6 +272,7 @@ int esModificacion(char *argv[], int pos, t_funcion_encontrada *func)
         if(strcmp(nombre,ptr_normal->nombre_funcion)==0)
         {
             func->normal = ptr_normal->funcion;
+            func->nombre=nombre;
             return OK;
         }
     }
@@ -295,6 +297,7 @@ int esModificacion(char *argv[], int pos, t_funcion_encontrada *func)
             {
                 func->porc = ptr_porc->funcion;
                 func->valor = valor;
+                func->nombre=nombre;
                 return OK;
             }
             else
@@ -309,6 +312,7 @@ int esModificacion(char *argv[], int pos, t_funcion_encontrada *func)
         if(strcmp(nombre,ptr_dobl->nombre_funcion)==0)
         {
             func->dobl = ptr_dobl->funcion;
+            func->nombre=nombre;
             return OK;
         }
     }
@@ -362,13 +366,17 @@ void informarError(int cod, const char *arg)
 
 void ejecutarFuncion(char *argv[], t_funcion_encontrada *func)
 {
+    int cod = OK;
 
     if(func->normal != NULL)
-        func->normal(argv,func->pos1);
+        cod = func->normal(argv,func->pos1);
     else if(func->porc != NULL)
-        func->porc(argv,func->valor,func->pos1);
+        cod = func->porc(argv,func->valor,func->pos1);
     else if(func->dobl != NULL)
-        func->dobl(argv,func->pos1,func->pos2);
+        cod = func->dobl(argv,func->pos1,func->pos2);
+    
+    if(cod != OK)
+        informarError(cod, func->nombre);
 }
 
 bool esRepetida(char *argv[], int pos)

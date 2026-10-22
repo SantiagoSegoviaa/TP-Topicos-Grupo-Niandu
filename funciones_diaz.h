@@ -4,8 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "estructuras.h"
-#include "compartidas.h"
+#include "compartido.h"
 
 int pixelNegativo(char *argv[],int pos);
 int pixelGrises(char *argv[], int pos);

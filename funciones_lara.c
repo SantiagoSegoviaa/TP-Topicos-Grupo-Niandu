@@ -4,17 +4,20 @@ int pixelRotarIzquierda (char* argv[], int pos)
 {
     t_imagen original;
     t_imagen rotar;
-    int alto, ancho; 
-    char rotar_name[256];
+    int alto, ancho;
+    char nombre_archivo_nuevo[TAM_RUTA];
 
 
-    if( imagenCargar(&original, argv[pos]) != 0)
+    if( ImagenCargar(&original, argv[pos]) != 0)
     {
-        imagenLiberar(&original);
-        return 1;
+        return ERR_EJECUCION;
     }
 
-    imagenCrear( &original, &rotar, original.metadata.ancho, original.metadata.alto);
+    if(ImagenCrear( &original, &rotar, original.metadata.ancho, original.metadata.alto) != 0)
+    {
+        ImagenLiberar(&original);
+        return ERR_MEMORIA;
+    }
 
     memcpy(rotar.metadata.encabezado + 38, original.metadata.encabezado + 42,sizeof(int));
     memcpy(rotar.metadata.encabezado + 42, original.metadata.encabezado + 38,sizeof(int));
@@ -30,17 +33,22 @@ int pixelRotarIzquierda (char* argv[], int pos)
         }
     }
 
-    strcpy(rotar_name, NOMBRE_GRUPO);
-    strcat(rotar_name, "rotar-izquierda_");
-    strcat(rotar_name, argv[pos]);
+    if(GeneraRuta(argv[pos], "rotar-izquierda_", nombre_archivo_nuevo) != OK)
+    {
+        ImagenLiberar(&rotar);
+        ImagenLiberar(&original);
+        return ERR_EJECUCION;
+    }
 
-    imagenGuardar(&rotar, rotar_name);
-    
-    imagenLiberar(&rotar);
-    imagenLiberar(&original);
+    if(ImagenGuardar(&rotar, nombre_archivo_nuevo) != 0)
+    {
+        ImagenLiberar(&rotar);
+        ImagenLiberar(&original);
+        return ERR_EJECUCION;
+    }
 
-    return 0;
+    ImagenLiberar(&rotar);
+    ImagenLiberar(&original);
 
-    //bio
-
+    return OK;
 }

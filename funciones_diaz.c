@@ -4,9 +4,9 @@ int pixelNegativo(char *argv[], int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[pos]) != 0) //Devuelve 0 si cargo la imagen correctamente, sino devuelve cualquier otro numero.
+    if(ImagenCargar(&img, argv[pos]) != 0) //Devuelve 0 si cargo la imagen correctamente, sino devuelve cualquier otro numero.
     {
-        return 1;
+        return ERR_EJECUCION;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -30,32 +30,34 @@ int pixelNegativo(char *argv[], int pos)
 
 
     //Creamos un nombre nuevo para el archivo
-    char nombre_archivo_nuevo[256];
-
-    strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
-    strcat(nombre_archivo_nuevo, "negativo_");
-    strcat(nombre_archivo_nuevo, argv[pos]);
+    char nombre_archivo_nuevo[TAM_RUTA];
+    if(GeneraRuta(argv[pos], "negativo_", nombre_archivo_nuevo) != OK)
+    {
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
+    }
 
     //Cargamos la matriz a un archivo nuevo.
-    if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)//Devuelve 0 si guarda correctamente la imagen, sino devuelve otro valor
+    if(ImagenGuardar(&img,nombre_archivo_nuevo) != 0)//Devuelve 0 si guarda correctamente la imagen, sino devuelve otro valor
     {
-        return 1;
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
     }
 
     //Liberamos la memoria de la matriz
-    imagenLiberar(&img);
+    ImagenLiberar(&img);
 
 
-    return 0;
+    return OK;
 }
 
 int pixelGrises(char *argv[], int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[pos]) != 0)
+    if(ImagenCargar(&img, argv[pos]) != 0)
     {
-        return 1;
+        return ERR_EJECUCION;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -83,32 +85,35 @@ int pixelGrises(char *argv[], int pos)
 
     //Como tuvimos en cuenta el padding en la carga ahora no hace falta
 
-    char nombre_archivo_nuevo[256];
+    char nombre_archivo_nuevo[TAM_RUTA];
 
-    strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
-    strcat(nombre_archivo_nuevo, "escala-de-grises_");
-    strcat(nombre_archivo_nuevo, argv[pos]);
+    if(GeneraRuta(argv[pos], "escala-de-grises_", nombre_archivo_nuevo) != OK)
+    {
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
+    }
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
-    if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return 1;
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
     }
 
     //Liberamos la memoria de la matriz
-    imagenLiberar(&img);
+    ImagenLiberar(&img);
 
-    return 0;
+    return OK;
 }
 
 int pixelEspHoriz(char* argv[], int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[pos]) != 0)
+    if(ImagenCargar(&img, argv[pos]) != 0)
     {
-        return 1;
+        return ERR_EJECUCION;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -133,33 +138,36 @@ int pixelEspHoriz(char* argv[], int pos)
 
     //Como tuvimos en cuenta el padding en la carga ahora no hace falta
 
-    char nombre_archivo_nuevo[256];
+    char nombre_archivo_nuevo[TAM_RUTA];
 
-    strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
-    strcat(nombre_archivo_nuevo, "espejar-horizontal_");
-    strcat(nombre_archivo_nuevo, argv[pos]);
+    if(GeneraRuta(argv[pos], "espejar-horizontal_", nombre_archivo_nuevo) != OK)
+    {
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
+    }
 
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
-    if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return 1;
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
     }
 
     //Liberamos la memoria de la matriz
-    imagenLiberar(&img);
+    ImagenLiberar(&img);
 
-    return 0;
+    return OK;
 }
 
 int pixelEspVert(char* argv[], int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[pos]) != 0)
+    if(ImagenCargar(&img, argv[pos]) != 0)
     {
-        return 1;
+        return ERR_EJECUCION;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -183,33 +191,36 @@ int pixelEspVert(char* argv[], int pos)
 
     //Como tuvimos en cuenta el padding en la carga ahora no hace falta
 
-    char nombre_archivo_nuevo[256];
+    char nombre_archivo_nuevo[TAM_RUTA];
 
-    strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
-    strcat(nombre_archivo_nuevo, "espejar-vertical_");
-    strcat(nombre_archivo_nuevo, argv[pos]);
+    if(GeneraRuta(argv[pos], "espejar-vertical_", nombre_archivo_nuevo) != OK)
+    {
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
+    }
 
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
-    if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return 1;
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
     }
 
     //Liberamos la memoria de la matriz
-    imagenLiberar(&img);
+    ImagenLiberar(&img);
 
-    return 0;
+    return OK;
 }
 
 int pixelMasContrast(char *argv[], int valor, int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[pos]) != 0)
+    if(ImagenCargar(&img, argv[pos]) != 0)
     {
-        return 1;
+        return ERR_EJECUCION;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -232,38 +243,36 @@ int pixelMasContrast(char *argv[], int valor, int pos)
 
     //Como tuvimos en cuenta el padding en la carga ahora no hace falta
 
-    char nombre_archivo_nuevo[256];
-    char num_buff[12];
+    char nombre_archivo_nuevo[TAM_RUTA];
 
-    sprintf(num_buff, "%d", valor);
-
-    strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
-    strcat(nombre_archivo_nuevo, "aumentar-contraste=");
-    strcat(nombre_archivo_nuevo, num_buff);
-    strcat(nombre_archivo_nuevo, "_");
-    strcat(nombre_archivo_nuevo, argv[pos]);
+    if(GeneraRuta(argv[pos], "aumentar-contraste_", nombre_archivo_nuevo) != OK)
+    {
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
+    }
 
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
-    if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return 1;
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
     }
 
     //Liberamos la memoria de la matriz
-    imagenLiberar(&img);
+    ImagenLiberar(&img);
 
-    return 0;
+    return OK;
 }
 
 int pixelMenosContrast(char* argv[], int valor, int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[pos]) != 0)
+    if(ImagenCargar(&img, argv[pos]) != 0)
     {
-        return 1;
+        return ERR_EJECUCION;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -286,30 +295,28 @@ int pixelMenosContrast(char* argv[], int valor, int pos)
 
     //Como tuvimos en cuenta el padding en la carga ahora no hace falta
 
-    char nombre_archivo_nuevo[256];
-    char num_buff[12];
+    char nombre_archivo_nuevo[TAM_RUTA];
 
-    sprintf(num_buff, "%d", valor);
-
-    strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
-    strcat(nombre_archivo_nuevo, "reducir-contraste=");
-    strcat(nombre_archivo_nuevo, num_buff);
-    strcat(nombre_archivo_nuevo, "_");
-    strcat(nombre_archivo_nuevo, argv[pos]);
+    if(GeneraRuta(argv[pos], "reducir-contraste_", nombre_archivo_nuevo) != OK)
+    {
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
+    }
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
-    if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return 1;
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
     }
 
 
     //Liberamos la memoria de la matriz
 
-    imagenLiberar(&img);
+    ImagenLiberar(&img);
 
-    return 0;
+    return OK;
 }
 
 unsigned char pixelValorContrast(unsigned char valorCanal, double factor)
@@ -328,9 +335,9 @@ int pixelTonRojo(char *argv[], int valor, int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[pos]) != 0)
+    if(ImagenCargar(&img, argv[pos]) != 0)
     {
-        return 1;
+        return ERR_EJECUCION;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -355,37 +362,35 @@ int pixelTonRojo(char *argv[], int valor, int pos)
 
     //Como tuvimos en cuenta el padding en la carga ahora no hace falta
 
-    char nombre_archivo_nuevo[256];
-    char num_buff[12];
+    char nombre_archivo_nuevo[TAM_RUTA];
 
-    sprintf(num_buff, "%d", valor);
-
-    strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
-    strcat(nombre_archivo_nuevo, "tonalidad-roja=");
-    strcat(nombre_archivo_nuevo, num_buff);
-    strcat(nombre_archivo_nuevo, "_");
-    strcat(nombre_archivo_nuevo, argv[pos]);
+    if(GeneraRuta(argv[pos], "tonalidad-roja_", nombre_archivo_nuevo) != OK)
+    {
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
+    }
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
-    if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return 1;
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
     }
 
     //Liberamos la memoria de la matriz
-    imagenLiberar(&img);
+    ImagenLiberar(&img);
 
-    return 0;
+    return OK;
 }
 
 int pixelTonAzul(char *argv[], int valor, int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[pos]) != 0)
+    if(ImagenCargar(&img, argv[pos]) != 0)
     {
-        return 1;
+        return ERR_EJECUCION;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -410,37 +415,35 @@ int pixelTonAzul(char *argv[], int valor, int pos)
 
     //Como tuvimos en cuenta el padding en la carga ahora no hace falta
 
-    char nombre_archivo_nuevo[256];
-    char num_buff[12];
+    char nombre_archivo_nuevo[TAM_RUTA];
 
-    sprintf(num_buff, "%d", valor);
-
-    strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
-    strcat(nombre_archivo_nuevo, "tonalidad-azul=");
-    strcat(nombre_archivo_nuevo, num_buff);
-    strcat(nombre_archivo_nuevo, "_");
-    strcat(nombre_archivo_nuevo, argv[pos]);
+    if(GeneraRuta(argv[pos], "tonalidad-azul_", nombre_archivo_nuevo) != OK)
+    {
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
+    }
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
-    if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return 1;
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
     }
 
     //Liberamos la memoria de la matriz
-    imagenLiberar(&img);
+    ImagenLiberar(&img);
 
-    return 0;
+    return OK;
 }
 
 int pixelTonVerde(char *argv[], int valor, int pos)
 {
     t_imagen img;
 
-    if(imagenCargar(&img, argv[pos]) != 0)
+    if(ImagenCargar(&img, argv[pos]) != 0)
     {
-        return 1;
+        return ERR_EJECUCION;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -465,28 +468,26 @@ int pixelTonVerde(char *argv[], int valor, int pos)
 
     //Como tuvimos en cuenta el padding en la carga ahora no hace falta
 
-    char nombre_archivo_nuevo[256];
-    char num_buff[12];
+    char nombre_archivo_nuevo[TAM_RUTA];
 
-    sprintf(num_buff, "%d", valor);
-
-    strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
-    strcat(nombre_archivo_nuevo, "tonalidad-verde=");
-    strcat(nombre_archivo_nuevo, num_buff);
-    strcat(nombre_archivo_nuevo, "_");
-    strcat(nombre_archivo_nuevo, argv[pos]);
+    if(GeneraRuta(argv[pos], "tonalidad-verde_", nombre_archivo_nuevo) != OK)
+    {
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
+    }
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
-    if(imagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
     {
-        return 1;
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
     }
 
     //Liberamos la memoria de la matriz
-    imagenLiberar(&img);
+    ImagenLiberar(&img);
 
-    return 0;
+    return OK;
 }
 
 int pixelRecortar(char *argv[], int valor, int pos)
@@ -494,17 +495,17 @@ int pixelRecortar(char *argv[], int valor, int pos)
     t_imagen img;
     t_imagen imgRecorte;
 
-    if(imagenCargar(&img, argv[pos]) != 0)
+    if(ImagenCargar(&img, argv[pos]) != 0)
     {
-        return 1;
+        return ERR_EJECUCION;
     }
 
     imgRecorte.pixeles = NULL;
     imgRecorte.metadata.encabezado = malloc(img.metadata.tamEncabezado);
     if(imgRecorte.metadata.encabezado == NULL)
     {
-        imagenLiberar(&img);
-        return 1;
+        ImagenLiberar(&img);
+        return ERR_MEMORIA;
     }
     memcpy(imgRecorte.metadata.encabezado, img.metadata.encabezado, img.metadata.tamEncabezado);
     imgRecorte.metadata.tamEncabezado = img.metadata.tamEncabezado;
@@ -520,9 +521,9 @@ int pixelRecortar(char *argv[], int valor, int pos)
     if(imgRecorte.metadata.ancho < 1 || abs(imgRecorte.metadata.alto) < 1)
     {
         printf("El recorte resulta en una imagen vacia.\n");
-        imagenLiberar(&imgRecorte);
-        imagenLiberar(&img);
-        return 1;
+        ImagenLiberar(&imgRecorte);
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
     }
 
     //Crear nueva matriz con las nuevas medidas
@@ -530,10 +531,10 @@ int pixelRecortar(char *argv[], int valor, int pos)
     if(imgRecorte.pixeles == NULL)
     {
         printf("Hubo un error y no se pudo reservar memoria.\n");
-        imagenLiberar(&imgRecorte);
-        imagenLiberar(&img);
+        ImagenLiberar(&imgRecorte);
+        ImagenLiberar(&img);
 
-        return 1;
+        return ERR_MEMORIA;
     }
 
     for(int y = 0; y < abs(imgRecorte.metadata.alto); y++)
@@ -543,10 +544,10 @@ int pixelRecortar(char *argv[], int valor, int pos)
         //Si hay un error lo informamos y liberamos toda la memoria anterior.
         if(imgRecorte.pixeles[y] == NULL)
         {
-            imagenLiberar(&imgRecorte);
-            imagenLiberar(&img);
+            ImagenLiberar(&imgRecorte);
+            ImagenLiberar(&img);
 
-            return 1;
+            return ERR_MEMORIA;
         }
     }
 
@@ -564,30 +565,28 @@ int pixelRecortar(char *argv[], int valor, int pos)
 
     //Como tuvimos en cuenta el padding en la carga ahora no hace falta
 
-    char nombre_archivo_nuevo[256];
-    char num_buff[12];
+    char nombre_archivo_nuevo[TAM_RUTA];
 
-    sprintf(num_buff, "%d", valor);
-
-    strcpy(nombre_archivo_nuevo, NOMBRE_GRUPO);
-    strcat(nombre_archivo_nuevo, "recortar=");
-    strcat(nombre_archivo_nuevo, num_buff);
-    strcat(nombre_archivo_nuevo, "_");
-    strcat(nombre_archivo_nuevo, argv[pos]);
+    if(GeneraRuta(argv[pos], "recortar_", nombre_archivo_nuevo) != OK)
+    {
+        ImagenLiberar(&imgRecorte);
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
+    }
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
-    if(imagenGuardar(&imgRecorte, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&imgRecorte, nombre_archivo_nuevo) != 0)
     {
-        imagenLiberar(&imgRecorte);
-        imagenLiberar(&img);
-        return 1;
+        ImagenLiberar(&imgRecorte);
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
     }
 
 
     //Liberamos la memoria de la matriz
-    imagenLiberar(&img);
-    imagenLiberar(&imgRecorte);
+    ImagenLiberar(&img);
+    ImagenLiberar(&imgRecorte);
 
-    return 0;
+    return OK;
 }

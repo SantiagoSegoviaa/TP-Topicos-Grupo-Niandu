@@ -1,7 +1,7 @@
 #ifndef FUNCIONES_PAZ_H_INCLUDED
 #define FUNCIONES_PAZ_H_INCLUDED
 
-#include "compartidas.h"
+#include "compartido.h"
 
 int pixelRotarDerecha (char* argv[],int pos);
 

@@ -22,10 +22,10 @@
     DNI: 45 612 200
     Entrega: Si
     -----------------
-    Apellido:
-    Nombre:
-    DNI:
-    Entrega:
+    Apellido: Gramajo
+    Nombre: Martina Dana
+    DNI: 45689186
+    Entrega: Si
     -----------------
     Apellido:
     Nombre:
@@ -235,7 +235,8 @@ int esModificacion(char *argv[], int pos, t_funcion_encontrada *func)
     {"--espejar-horizontal", pixelEspHoriz},
     {"--espejar-vertical", pixelEspVert},
     {"--rotar-derecha", pixelRotarDerecha},
-    {"--rotar-izquierda", pixelRotarIzquierda}
+    {"--rotar-izquierda", pixelRotarIzquierda},
+    {"--comodin", pixelComodin}
     };
 
     const t_modif_porc *ptr_porc;
@@ -374,7 +375,7 @@ void ejecutarFuncion(char *argv[], t_funcion_encontrada *func)
         cod = func->porc(argv,func->valor,func->pos1);
     else if(func->dobl != NULL)
         cod = func->dobl(argv,func->pos1,func->pos2);
-    
+
     if(cod != OK)
         informarError(cod, func->nombre);
 }

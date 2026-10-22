@@ -8,6 +8,7 @@
 #include "funciones_paz.h"
 #include "funciones_segovia.h"
 #include "funciones_lara.h"
+#include "funciones_gramajo.h"
 #include "compartido.h"
 #include "estructuras.h"
 

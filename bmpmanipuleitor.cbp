@@ -11,6 +11,7 @@
 				<Option object_output="./" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters='--comodin &quot;C:\Users\martina.gramajo\Downloads\Facu\Tópicos de Programación\tp\TP-Topicos-Grupo-Niandu\Imagenes\unlam.bmp&quot;' />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -40,6 +41,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="funciones_diaz.h" />
+		<Unit filename="funciones_gramajo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="funciones_gramajo.h" />
 		<Unit filename="funciones_grupo.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -12,8 +12,7 @@ int ImagenCargar(t_imagen *img, const char *nombre)
     archivo = fopen(nombre, "rb");
     if(archivo == NULL)
     {
-        perror("Ocurrio un error y no se pudo abrir el archivo.");
-        return ERR_EJECUCION;
+        return ERR_NO_EXISTE;
     }
 
     int offset_datos;

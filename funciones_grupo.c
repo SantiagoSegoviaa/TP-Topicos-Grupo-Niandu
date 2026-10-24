@@ -27,10 +27,10 @@
     DNI: 45689186
     Entrega: Si
     -----------------
-    Apellido:
-    Nombre:
-    DNI:
-    Entrega:
+    Apellido:Sanchez   
+    Nombre:Juan Manuel
+    DNI:45007095
+    Entrega:Si
     -----------------
     Apellido:
     Nombre:

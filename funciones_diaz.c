@@ -4,9 +4,10 @@ int pixelNegativo(char *argv[], int pos)
 {
     t_imagen img;
 
-    if(ImagenCargar(&img, argv[pos]) != 0) //Devuelve 0 si cargo la imagen correctamente, sino devuelve cualquier otro numero.
+    int cod = ImagenCargar(&img, argv[pos]); //Devuelve 0 si cargo la imagen correctamente, sino devuelve cualquier otro numero.
+    if(cod != OK)
     {
-        return ERR_EJECUCION;
+        return cod;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -55,9 +56,10 @@ int pixelGrises(char *argv[], int pos)
 {
     t_imagen img;
 
-    if(ImagenCargar(&img, argv[pos]) != 0)
+    int cod = ImagenCargar(&img, argv[pos]);
+    if(cod != OK)
     {
-        return ERR_EJECUCION;
+        return cod;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -111,9 +113,10 @@ int pixelEspHoriz(char* argv[], int pos)
 {
     t_imagen img;
 
-    if(ImagenCargar(&img, argv[pos]) != 0)
+    int cod = ImagenCargar(&img, argv[pos]);
+    if(cod != OK)
     {
-        return ERR_EJECUCION;
+        return cod;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -165,9 +168,10 @@ int pixelEspVert(char* argv[], int pos)
 {
     t_imagen img;
 
-    if(ImagenCargar(&img, argv[pos]) != 0)
+    int cod = ImagenCargar(&img, argv[pos]);
+    if(cod != OK)
     {
-        return ERR_EJECUCION;
+        return cod;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -218,9 +222,10 @@ int pixelMasContrast(char *argv[], int valor, int pos)
 {
     t_imagen img;
 
-    if(ImagenCargar(&img, argv[pos]) != 0)
+    int cod = ImagenCargar(&img, argv[pos]);
+    if(cod != OK)
     {
-        return ERR_EJECUCION;
+        return cod;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -270,9 +275,10 @@ int pixelMenosContrast(char* argv[], int valor, int pos)
 {
     t_imagen img;
 
-    if(ImagenCargar(&img, argv[pos]) != 0)
+    int cod = ImagenCargar(&img, argv[pos]);
+    if(cod != OK)
     {
-        return ERR_EJECUCION;
+        return cod;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -335,9 +341,10 @@ int pixelTonRojo(char *argv[], int valor, int pos)
 {
     t_imagen img;
 
-    if(ImagenCargar(&img, argv[pos]) != 0)
+    int cod = ImagenCargar(&img, argv[pos]);
+    if(cod != OK)
     {
-        return ERR_EJECUCION;
+        return cod;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -388,9 +395,10 @@ int pixelTonAzul(char *argv[], int valor, int pos)
 {
     t_imagen img;
 
-    if(ImagenCargar(&img, argv[pos]) != 0)
+    int cod = ImagenCargar(&img, argv[pos]);
+    if(cod != OK)
     {
-        return ERR_EJECUCION;
+        return cod;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -441,9 +449,10 @@ int pixelTonVerde(char *argv[], int valor, int pos)
 {
     t_imagen img;
 
-    if(ImagenCargar(&img, argv[pos]) != 0)
+    int cod = ImagenCargar(&img, argv[pos]);
+    if(cod != OK)
     {
-        return ERR_EJECUCION;
+        return cod;
     }
 
     //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
@@ -495,9 +504,10 @@ int pixelRecortar(char *argv[], int valor, int pos)
     t_imagen img;
     t_imagen imgRecorte;
 
-    if(ImagenCargar(&img, argv[pos]) != 0)
+    int cod = ImagenCargar(&img, argv[pos]);
+    if(cod != OK)
     {
-        return ERR_EJECUCION;
+        return cod;
     }
 
     imgRecorte.pixeles = NULL;

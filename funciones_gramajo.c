@@ -32,8 +32,9 @@ int pixelComodin(char *argv[], int pos)
     t_imagen img;
     char nombre_archivo_nuevo[TAM_RUTA];
 
-    if(ImagenCargar(&img, argv[pos]) != 0)
-        return ERR_EJECUCION;
+    int cod = ImagenCargar(&img, argv[pos]);
+    if(cod != OK)
+        return cod;
 
     for(int y = 0; y < abs(img.metadata.alto); y++)
     {

@@ -8,9 +8,10 @@ int pixelRotarIzquierda (char* argv[], int pos)
     char nombre_archivo_nuevo[TAM_RUTA];
 
 
-    if( ImagenCargar(&original, argv[pos]) != 0)
+    int cod = ImagenCargar(&original, argv[pos]);
+    if(cod != OK)
     {
-        return ERR_EJECUCION;
+        return cod;
     }
 
     if(ImagenCrear( &original, &rotar, original.metadata.ancho, original.metadata.alto) != 0)

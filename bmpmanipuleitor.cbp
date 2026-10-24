@@ -11,7 +11,6 @@
 				<Option object_output="./" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters='--comodin &quot;C:\Users\martina.gramajo\Downloads\Facu\Tópicos de Programación\tp\TP-Topicos-Grupo-Niandu\Imagenes\unlam.bmp&quot;' />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>

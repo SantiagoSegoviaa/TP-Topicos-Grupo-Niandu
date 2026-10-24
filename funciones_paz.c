@@ -5,10 +5,11 @@ int pixelRotarDerecha (char* argv[], int pos)
     t_imagen imgOriginal;
     t_imagen imgNueva;
 
-    if( ImagenCargar(&imgOriginal, argv[pos]) != 0)
+    int cod = ImagenCargar(&imgOriginal, argv[pos]);
+    if(cod != OK)
     {
         printf("Error al cargar el arcivo en funcion rotar-derecha.\n");
-        return ERR_EJECUCION;
+        return cod;
     }
 
     if(ImagenCrear( &imgOriginal, &imgNueva, imgOriginal.metadata.ancho, imgOriginal.metadata.alto) != 0)

@@ -19,13 +19,15 @@ int pixelConcatenarHoriz(char *argv[], int pos1, int pos2)
     t_imagen nueva;
     char nombre_archivo_nuevo[TAM_RUTA];
 
-    if(ImagenCargar(&img1, argv[pos1]) != 0)
-        return ERR_EJECUCION;
+    int cod = ImagenCargar(&img1, argv[pos1]);
+    if(cod != OK)
+        return cod;
 
-    if(ImagenCargar(&img2, argv[pos2]) != 0)
+    cod = ImagenCargar(&img2, argv[pos2]);
+    if(cod != OK)
     {
         ImagenLiberar(&img1);
-        return ERR_EJECUCION;
+        return cod;
     }
 
     int alto1 = abs(img1.metadata.alto);

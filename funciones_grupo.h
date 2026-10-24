@@ -10,13 +10,10 @@
 #include "funciones_lara.h"
 #include "funciones_gramajo.h"
 #include "funciones_sanchez.h"
+#include "funciones_salazar.h"
 #include "compartido.h"
 #include "estructuras.h"
 
-/*
-Aqu� deben hacer los includes de sus archivos individuales, por ejemplo:
-#include "funciones_rufino.h"
- */
 int TieneExtensionBMP(const char *ruta);
 void informarError(int cod, const char *arg);
 int solucion(int argc, char* argv[]);

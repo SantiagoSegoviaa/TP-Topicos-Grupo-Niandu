@@ -56,6 +56,14 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="funciones_paz.h" />
+		<Unit filename="funciones_salazar.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="funciones_salazar.h" />
+		<Unit filename="funciones_sanchez.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="funciones_sanchez.h" />
 		<Unit filename="funciones_segovia.c">
 			<Option compilerVar="CC" />
 		</Unit>

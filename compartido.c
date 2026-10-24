@@ -21,9 +21,17 @@ int ImagenCargar(t_imagen *img, const char *nombre)
     //LOS BYTES 18-25 NOS DICEN EL ANCHO Y EL ALTO DE LA IMAGEN.
     fseek(archivo, 18, SEEK_SET);
     if(fread(&img->metadata.ancho, sizeof(int), 1, archivo) != 1)
-        goto error;
+    {
+        fclose(archivo);
+        ImagenLiberar(img);
+        return 1;
+    }
     if(fread(&img->metadata.alto, sizeof(int), 1, archivo) != 1)
-        goto error;
+    {
+        fclose(archivo);
+        ImagenLiberar(img);
+        return 1;
+    }
 
     int filas = abs(img->metadata.alto);
 
@@ -32,23 +40,41 @@ int ImagenCargar(t_imagen *img, const char *nombre)
     //EL BYTE 10 NOS DICE DONDE EMPIEZA LA IMAGEN
     fseek(archivo, 10, SEEK_SET);
     if(fread(&offset_datos, sizeof(int), 1, archivo) != 1)
-        goto error;
+    {
+        fclose(archivo);
+        ImagenLiberar(img);
+        return 1;
+    }
 
     if(offset_datos < 54)
-        goto error;
+    {
+        fclose(archivo);
+        ImagenLiberar(img);
+        return 1;
+    }
 
     if(img->metadata.ancho <= 0 || img->metadata.alto == 0)
-        goto error;
+    {
+        fclose(archivo);
+        ImagenLiberar(img);
+        return 1;
+    }
 
     //CLONAMOS EL ENCABEZADO.
     img->metadata.encabezado = malloc(offset_datos);
     if(img->metadata.encabezado == NULL)
     {
-        goto error;
+        fclose(archivo);
+        ImagenLiberar(img);
+        return 1;
     }
     fseek(archivo, 0, SEEK_SET);
     if(fread(img->metadata.encabezado, offset_datos, 1, archivo) != 1)
-        goto error;
+    {
+        fclose(archivo);
+        ImagenLiberar(img);
+        return 1;
+    }
     img->metadata.tamEncabezado = (unsigned int)offset_datos;
 
     //NOS PARAMOS DONDE EMPIEZA LA IMAGEN PARA CARGAR LA MATRIZ
@@ -58,7 +84,9 @@ int ImagenCargar(t_imagen *img, const char *nombre)
     img->pixeles = calloc(filas, sizeof(t_pixel*));
     if(img->pixeles == NULL)
     {
-        goto error;
+        fclose(archivo);
+        ImagenLiberar(img);
+        return 1;
     }
 
     for(int y = 0; y < filas; y++)
@@ -66,11 +94,17 @@ int ImagenCargar(t_imagen *img, const char *nombre)
         img->pixeles[y] = malloc(img->metadata.ancho * sizeof(t_pixel));
         if(img->pixeles[y] == NULL)
         {
-            goto error;
+            fclose(archivo);
+            ImagenLiberar(img);
+            return 1;
         }
 
         if(fread(img->pixeles[y], sizeof(t_pixel), img->metadata.ancho, archivo) != (size_t)img->metadata.ancho)
-            goto error;
+        {
+            fclose(archivo);
+            ImagenLiberar(img);
+            return 1;
+        }
 
         //TENER EN CUENTA EL PADDING
         if(padding > 0)
@@ -83,11 +117,6 @@ int ImagenCargar(t_imagen *img, const char *nombre)
     fclose(archivo);
 
     return 0;
-
-    error:
-        fclose(archivo);
-        ImagenLiberar(img);
-        return 1;
 }
 
 void ImagenLiberar(t_imagen *img)

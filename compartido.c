@@ -13,7 +13,7 @@ int ImagenCargar(t_imagen *img, const char *nombre)
     if(archivo == NULL)
     {
         perror("Ocurrio un error y no se pudo abrir el archivo.");
-        return 1;
+        return ERR_EJECUCION;
     }
 
     int offset_datos;
@@ -24,13 +24,13 @@ int ImagenCargar(t_imagen *img, const char *nombre)
     {
         fclose(archivo);
         ImagenLiberar(img);
-        return 1;
+        return ERR_EJECUCION;
     }
     if(fread(&img->metadata.alto, sizeof(int), 1, archivo) != 1)
     {
         fclose(archivo);
         ImagenLiberar(img);
-        return 1;
+        return ERR_EJECUCION;
     }
 
     int filas = abs(img->metadata.alto);
@@ -43,21 +43,21 @@ int ImagenCargar(t_imagen *img, const char *nombre)
     {
         fclose(archivo);
         ImagenLiberar(img);
-        return 1;
+        return ERR_EJECUCION;
     }
 
     if(offset_datos < 54)
     {
         fclose(archivo);
         ImagenLiberar(img);
-        return 1;
+        return ERR_EJECUCION;
     }
 
     if(img->metadata.ancho <= 0 || img->metadata.alto == 0)
     {
         fclose(archivo);
         ImagenLiberar(img);
-        return 1;
+        return ERR_EJECUCION;
     }
 
     //CLONAMOS EL ENCABEZADO.
@@ -66,14 +66,14 @@ int ImagenCargar(t_imagen *img, const char *nombre)
     {
         fclose(archivo);
         ImagenLiberar(img);
-        return 1;
+        return ERR_MEMORIA;
     }
     fseek(archivo, 0, SEEK_SET);
     if(fread(img->metadata.encabezado, offset_datos, 1, archivo) != 1)
     {
         fclose(archivo);
         ImagenLiberar(img);
-        return 1;
+        return ERR_EJECUCION;
     }
     img->metadata.tamEncabezado = (unsigned int)offset_datos;
 
@@ -86,7 +86,7 @@ int ImagenCargar(t_imagen *img, const char *nombre)
     {
         fclose(archivo);
         ImagenLiberar(img);
-        return 1;
+        return ERR_MEMORIA;
     }
 
     for(int y = 0; y < filas; y++)
@@ -96,14 +96,14 @@ int ImagenCargar(t_imagen *img, const char *nombre)
         {
             fclose(archivo);
             ImagenLiberar(img);
-            return 1;
+            return ERR_MEMORIA;
         }
 
         if(fread(img->pixeles[y], sizeof(t_pixel), img->metadata.ancho, archivo) != (size_t)img->metadata.ancho)
         {
             fclose(archivo);
             ImagenLiberar(img);
-            return 1;
+            return ERR_EJECUCION;
         }
 
         //TENER EN CUENTA EL PADDING
@@ -116,7 +116,7 @@ int ImagenCargar(t_imagen *img, const char *nombre)
     //CERRAMOS EL ARCHIVO
     fclose(archivo);
 
-    return 0;
+    return OK;
 }
 
 void ImagenLiberar(t_imagen *img)
@@ -151,7 +151,7 @@ int ImagenGuardar(t_imagen *img, const char *nombre)
     if(archivo_nuevo == NULL)
     {
         printf("Ocurrio un error y no se pudo crear el archivo %s.\n", nombre);
-        return 1;
+        return ERR_EJECUCION;
     }
 
     memcpy(img->metadata.encabezado + 2, &img->metadata.tamArchivo, sizeof(int));
@@ -163,7 +163,7 @@ int ImagenGuardar(t_imagen *img, const char *nombre)
     {
         printf("Ocurrio un error y no se pudo escribir sobre el archivo.\n");
         fclose(archivo_nuevo);
-        return 1;
+        return ERR_EJECUCION;
     }
 
     unsigned char padding_bytes[3] = {0, 0, 0};
@@ -174,14 +174,14 @@ int ImagenGuardar(t_imagen *img, const char *nombre)
         {
             printf("Ocurrio un error y no se pudo escribir sobre el archivo.\n");
             fclose(archivo_nuevo);
-            return 1;
+            return ERR_EJECUCION;
         }
 
         if(padding > 0 && fwrite(padding_bytes, 1, padding, archivo_nuevo) != (size_t)padding)
         {
             printf("Ocurrio un error y no se pudo escribir sobre el archivo.\n");
             fclose(archivo_nuevo);
-            return 1;
+            return ERR_EJECUCION;
         }
     }
 
@@ -208,7 +208,7 @@ int ImagenCrear(const t_imagen* imgOrigen, t_imagen* imgDestino, int alto, int a
     if(imgDestino->metadata.encabezado == NULL)
     {
         printf("Error al duplicar el encabezado.\n");
-        return 1;
+        return ERR_NO_EXISTE;
     }
     memcpy(imgDestino->metadata.encabezado, imgOrigen->metadata.encabezado, imgOrigen->metadata.tamEncabezado);
 
@@ -218,7 +218,7 @@ int ImagenCrear(const t_imagen* imgOrigen, t_imagen* imgDestino, int alto, int a
     {
         ImagenLiberar(imgDestino);
         printf("Error al duplicar el encabezado.\n");
-        return 1;
+        return ERR_NO_EXISTE;
     }
     for(int i = 0; i < filas; i++)
     {
@@ -227,10 +227,10 @@ int ImagenCrear(const t_imagen* imgOrigen, t_imagen* imgDestino, int alto, int a
         {
             ImagenLiberar(imgDestino);
             printf("Error al duplicar el encabezado.\n");
-            return 1;
+            return ERR_MEMORIA;
         }
     }
-    return 0;
+    return OK;
 }
 
 int GeneraRuta(const char *ruta, const char* operacion, char *destino){

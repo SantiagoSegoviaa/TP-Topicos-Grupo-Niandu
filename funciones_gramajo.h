@@ -4,5 +4,6 @@
 #include "compartido.h"
 
 int pixelComodin(char *argv[], int pos);
+int pixelTonRojo(char *argv[], int valor, int pos);
 
 #endif // FUNCIONES_GRAMAJO_H_INCLUDED

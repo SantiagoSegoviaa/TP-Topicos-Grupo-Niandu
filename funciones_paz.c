@@ -52,3 +52,56 @@ int pixelRotarDerecha (char* argv[], int pos)
     return OK;
 }
 
+int pixelEspVert(char* argv[], int pos)
+{
+    t_imagen img;
+
+    int cod = ImagenCargar(&img, argv[pos]);
+    if(cod != OK)
+    {
+        return cod;
+    }
+
+    //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
+    //DONDE Y ES LA FILA Y X ES LA COLUMNA
+
+    //Invertimos los pixeles.
+
+    for(int x = 0; x < img.metadata.ancho; x++)
+    {
+        int y = 0;
+
+        while(y < abs(img.metadata.alto) / 2)
+        {
+            t_pixel aux = img.pixeles[y][x];
+            img.pixeles[y][x] = img.pixeles[img.metadata.alto - 1 - y][x];
+            img.pixeles[img.metadata.alto - 1 - y][x] = aux;
+
+            y++;
+        }
+    }
+
+    //Como tuvimos en cuenta el padding en la carga ahora no hace falta
+
+    char nombre_archivo_nuevo[TAM_RUTA];
+
+    if(GeneraRuta(argv[pos], "espejar-vertical_", nombre_archivo_nuevo) != OK)
+    {
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
+    }
+
+
+    //Creamos el archivo nuevo para cargar la matriz modificada
+
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != OK)
+    {
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
+    }
+
+    //Liberamos la memoria de la matriz
+    ImagenLiberar(&img);
+
+    return OK;
+}

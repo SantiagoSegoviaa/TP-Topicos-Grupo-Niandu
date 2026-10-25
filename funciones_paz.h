@@ -4,5 +4,6 @@
 #include "compartido.h"
 
 int pixelRotarDerecha (char* argv[],int pos);
+int pixelEspVert(char *argv[], int pos);
 
 #endif // FUNCIONES_PAZ_H_INCLUDED

@@ -80,3 +80,57 @@ int pixelConcatenarHoriz(char *argv[], int pos1, int pos2)
 
     return resultado;
 }
+
+int pixelTonAzul(char *argv[], int valor, int pos)
+{
+    t_imagen img;
+
+    int cod = ImagenCargar(&img, argv[pos]);
+    if(cod != OK)
+    {
+        return cod;
+    }
+
+    //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
+    //DONDE Y ES LA FILA Y X ES LA COLUMNA
+
+    //Para aumentar la intensidad de un color se aplica un factor M > 1.0 unicamente al canal que deseemos y dejamos los otros intactos.
+
+    double m = 1 + (valor/100.0);
+
+    for(int y = 0; y < abs(img.metadata.alto); y++)
+    {
+        for(int x = 0; x < img.metadata.ancho; x++)
+        {
+            int nuevo_valor = (int)(img.pixeles[y][x].b * m);
+
+            if(nuevo_valor > 255)
+                nuevo_valor = 255;
+
+            img.pixeles[y][x].b = (unsigned char)nuevo_valor;
+        }
+    }
+
+    //Como tuvimos en cuenta el padding en la carga ahora no hace falta
+
+    char nombre_archivo_nuevo[TAM_RUTA];
+
+    if(GeneraRuta(argv[pos], "tonalidad-azul_", nombre_archivo_nuevo) != OK)
+    {
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
+    }
+
+    //Creamos el archivo nuevo para cargar la matriz modificada
+
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    {
+        ImagenLiberar(&img);
+        return ERR_EJECUCION;
+    }
+
+    //Liberamos la memoria de la matriz
+    ImagenLiberar(&img);
+
+    return OK;
+}

@@ -186,29 +186,39 @@ int TieneExtensionBMP(const char *ruta)
 int esArchivoBMP(const char *ruta)
 {
     unsigned char firma[2];
-    size_t bytesleidos_firma;
     unsigned short profundidad;
     unsigned int compresion;
-
 
     FILE *archivo = fopen(ruta,"rb");
     if(!archivo)
         return ERR_NO_EXISTE;
 
-    bytesleidos_firma = fread(firma,1,2,archivo);
+    if(fread(firma, 1, 2, archivo) != 2 || firma[0] != 'B' || firma[1] != 'M')
+    {
+        fclose(archivo);
+        return ERR_NO_ES_BMP;
+    }
+
     fseek(archivo, 28, SEEK_SET);
-    fread(&profundidad, 2, 1, archivo);
-    fseek(archivo,30, SEEK_SET);
-    fread(&compresion, 4, 1, archivo);
+    if(fread(&profundidad, 2, 1, archivo) != 1)
+    {
+        fclose(archivo);
+        return ERR_NO_ES_BMP;
+    }
+    fseek(archivo, 30, SEEK_SET);
+    if(fread(&compresion, 4, 1, archivo) != 1)
+    {
+        fclose(archivo);
+        return ERR_NO_ES_BMP;
+    }
     fclose(archivo);
 
-    if(bytesleidos_firma!= 2 || profundidad != 24 || compresion != 0)
+    if(profundidad != 24)
         return ERR_PROFUNDIDAD;
-    if(*firma != 'B' || *(firma+1) != 'M')
-        return ERR_NO_ES_BMP;
+    if(compresion != 0)
+        return ERR_COMPRESION;
 
     return OK;
-
 }
 
 int esModificacion(char *argv[], int pos, t_funcion_encontrada *func)

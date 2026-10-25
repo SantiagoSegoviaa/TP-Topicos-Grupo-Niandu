@@ -91,8 +91,6 @@ int pixelTonAzul(char *argv[], int valor, int pos)
         return cod;
     }
 
-    //Para aumentar la intensidad de un color se aplica un factor M > 1.0 unicamente al canal que deseemos y dejamos los otros intactos.
-
     double m = 1 + (valor/100.0);
 
     for(int y = 0; y < abs(img.metadata.alto); y++)

@@ -62,8 +62,6 @@ int pixelEspVert(char* argv[], int pos)
         return cod;
     }
 
-    //Invertimos los pixeles.
-
     for(int x = 0; x < img.metadata.ancho; x++)
     {
         int y = 0;

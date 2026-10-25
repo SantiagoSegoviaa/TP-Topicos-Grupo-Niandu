@@ -61,8 +61,6 @@ int pixelMenosContrast(char* argv[], int valor, int pos)
         return cod;
     }
 
-    //El calculo del aumento del contraste viene de un factor de escalado F que a su vez proviene de la variable de contraste C
-
     double var_contraste = -(valor * 255)/100;
     double factor_esc = (259 * (var_contraste + 255)) / (255 * (259 - var_contraste));
 

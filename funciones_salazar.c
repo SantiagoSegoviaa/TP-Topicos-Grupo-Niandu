@@ -38,9 +38,9 @@ int pixelConcatenarVert(char *argv[], int pos1, int pos2)
     int anchoRes  = (img1.metadata.ancho > img2.metadata.ancho)
                     ? img1.metadata.ancho : img2.metadata.ancho;
 
-    if(ImagenCrear(&img1, &res, altoRes, anchoRes) != 0)
+    if(ImagenCrear(&img1, &res, altoRes, anchoRes) != OK)
     {
-        ImagenLiberar(&img1);   // sin printf: informarError ya avisa
+        ImagenLiberar(&img1);  
         ImagenLiberar(&img2);
         return ERR_MEMORIA;
     }
@@ -59,13 +59,13 @@ int pixelConcatenarVert(char *argv[], int pos1, int pos2)
         for(int x = anchoOrigen; x < anchoRes; x++)   // relleno si es mas angosta
             dst[x] = COLOR_RELLENO;
     }
-
+    
     if(GeneraRuta(argv[pos1], "concatenar-vertical_", rutaSalida) != OK)
     {
         printf("No se pudo generar el nombre del archivo de salida.\n");
         ret = ERR_EJECUCION;
     }
-    else if(ImagenGuardar(&res, rutaSalida) != 0)
+    else if(ImagenGuardar(&res, rutaSalida) != OK)
         ret = ERR_EJECUCION;   // ImagenGuardar ya informa el motivo
     else
         ret = OK;
@@ -87,9 +87,6 @@ int pixelTonVerde(char *argv[], int valor, int pos)
         return cod;
     }
 
-    //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
-    //DONDE Y ES LA FILA Y X ES LA COLUMNA
-
     //Para aumentar la intensidad de un color se aplica un factor M > 1.0 unicamente al canal que deseemos y dejamos los otros intactos.
 
     double m = 1 + (valor/100.0);
@@ -107,8 +104,6 @@ int pixelTonVerde(char *argv[], int valor, int pos)
         }
     }
 
-    //Como tuvimos en cuenta el padding en la carga ahora no hace falta
-
     char nombre_archivo_nuevo[TAM_RUTA];
 
     if(GeneraRuta(argv[pos], "tonalidad-verde_", nombre_archivo_nuevo) != OK)
@@ -117,15 +112,12 @@ int pixelTonVerde(char *argv[], int valor, int pos)
         return ERR_EJECUCION;
     }
 
-    //Creamos el archivo nuevo para cargar la matriz modificada
-
-    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&img);
         return ERR_EJECUCION;
     }
 
-    //Liberamos la memoria de la matriz
     ImagenLiberar(&img);
 
     return OK;

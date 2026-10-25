@@ -1,30 +1,10 @@
 #include "funciones_gramajo.h"
 
-static unsigned char limitarCanal(int valor)
+unsigned char limitarCanal(int valor)
 {
     if(valor > 255)
         return 255;
     return (unsigned char)valor;
-}
-
-static int nombreArchivoComodin(const char *ruta, char *destino)
-{
-    const char *ultimoSeparador = strrchr(ruta, '/');
-    const char *separadorWindows = strrchr(ruta, '\\');
-    const char *nombre;
-    int largo;
-
-    if(separadorWindows != NULL &&
-       (ultimoSeparador == NULL || separadorWindows > ultimoSeparador))
-        ultimoSeparador = separadorWindows;
-
-    nombre = ultimoSeparador == NULL ? ruta : ultimoSeparador + 1;
-    largo = snprintf(destino, TAM_RUTA, "%scomodin_%s", NOMBRE_GRUPO, nombre);
-
-    if(largo < 0 || largo >= TAM_RUTA)
-        return ERR_EJECUCION;
-
-    return OK;
 }
 
 int pixelComodin(char *argv[], int pos)
@@ -52,13 +32,13 @@ int pixelComodin(char *argv[], int pos)
         }
     }
 
-    if(nombreArchivoComodin(argv[pos], nombre_archivo_nuevo) != OK)
+    if(GeneraRuta(argv[pos], "comodin_", nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&img);
         return ERR_EJECUCION;
     }
 
-    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&img);
         return ERR_EJECUCION;
@@ -78,9 +58,6 @@ int pixelTonRojo(char *argv[], int valor, int pos)
         return cod;
     }
 
-    //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
-    //DONDE Y ES LA FILA Y X ES LA COLUMNA
-
     //Para aumentar la intensidad de un color se aplica un factor M > 1.0 unicamente al canal que deseemos y dejamos los otros intactos.
 
     double m = 1 + (valor/100.0);
@@ -98,8 +75,6 @@ int pixelTonRojo(char *argv[], int valor, int pos)
         }
     }
 
-    //Como tuvimos en cuenta el padding en la carga ahora no hace falta
-
     char nombre_archivo_nuevo[TAM_RUTA];
 
     if(GeneraRuta(argv[pos], "tonalidad-roja_", nombre_archivo_nuevo) != OK)
@@ -108,15 +83,12 @@ int pixelTonRojo(char *argv[], int valor, int pos)
         return ERR_EJECUCION;
     }
 
-    //Creamos el archivo nuevo para cargar la matriz modificada
-
-    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&img);
         return ERR_EJECUCION;
     }
 
-    //Liberamos la memoria de la matriz
     ImagenLiberar(&img);
 
     return OK;

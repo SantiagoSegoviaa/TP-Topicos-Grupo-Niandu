@@ -11,9 +11,6 @@ int pixelNegativo(char *argv[], int pos)
         return cod;
     }
 
-    //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
-    //DONDE Y ES LA FILA Y X ES LA COLUMNA
-
     //Cambiamos los pixeles a sus opuestos para crear el negativo
 
     for(int y = 0; y < abs(img.metadata.alto); y++)
@@ -27,8 +24,6 @@ int pixelNegativo(char *argv[], int pos)
             img.pixeles[y][x].b = 255 - img.pixeles[y][x].b;
         }
     }
-
-    //Como tuvimos en cuenta el padding en la carga ahora no hace falta
 
 
     //Creamos un nombre nuevo para el archivo
@@ -46,7 +41,6 @@ int pixelNegativo(char *argv[], int pos)
         return ERR_EJECUCION;
     }
 
-    //Liberamos la memoria de la matriz
     ImagenLiberar(&img);
 
 
@@ -62,9 +56,6 @@ int pixelGrises(char *argv[], int pos)
     {
         return cod;
     }
-
-    //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
-    //DONDE Y ES LA FILA Y X ES LA COLUMNA
 
     //Cambiamos los pixeles a su version en gris.
 
@@ -83,8 +74,6 @@ int pixelGrises(char *argv[], int pos)
         }
     }
 
-    //Como tuvimos en cuenta el padding en la carga ahora no hace falta
-
     char nombre_archivo_nuevo[TAM_RUTA];
 
     if(GeneraRuta(argv[pos], "escala-de-grises_", nombre_archivo_nuevo) != OK)
@@ -93,15 +82,12 @@ int pixelGrises(char *argv[], int pos)
         return ERR_EJECUCION;
     }
 
-    //Creamos el archivo nuevo para cargar la matriz modificada
-
     if(ImagenGuardar(&img, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&img);
         return ERR_EJECUCION;
     }
 
-    //Liberamos la memoria de la matriz
     ImagenLiberar(&img);
 
     return OK;

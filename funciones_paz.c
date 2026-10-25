@@ -12,7 +12,7 @@ int pixelRotarDerecha (char* argv[], int pos)
         return cod;
     }
 
-    if(ImagenCrear( &imgOriginal, &imgNueva, imgOriginal.metadata.ancho, imgOriginal.metadata.alto) != 0)
+    if(ImagenCrear( &imgOriginal, &imgNueva, imgOriginal.metadata.ancho, abs(imgOriginal.metadata.alto)) != OK)
     {
         ImagenLiberar(&imgOriginal);
         return ERR_MEMORIA;
@@ -39,7 +39,7 @@ int pixelRotarDerecha (char* argv[], int pos)
         return ERR_EJECUCION;
     }
 
-    if(ImagenGuardar(&imgNueva, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&imgNueva, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&imgNueva);
         ImagenLiberar(&imgOriginal);
@@ -62,9 +62,6 @@ int pixelEspVert(char* argv[], int pos)
         return cod;
     }
 
-    //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
-    //DONDE Y ES LA FILA Y X ES LA COLUMNA
-
     //Invertimos los pixeles.
 
     for(int x = 0; x < img.metadata.ancho; x++)
@@ -74,14 +71,12 @@ int pixelEspVert(char* argv[], int pos)
         while(y < abs(img.metadata.alto) / 2)
         {
             t_pixel aux = img.pixeles[y][x];
-            img.pixeles[y][x] = img.pixeles[img.metadata.alto - 1 - y][x];
-            img.pixeles[img.metadata.alto - 1 - y][x] = aux;
+            img.pixeles[y][x] = img.pixeles[abs(img.metadata.alto) - 1 - y][x];
+            img.pixeles[abs(img.metadata.alto) - 1 - y][x] = aux;
 
             y++;
         }
     }
-
-    //Como tuvimos en cuenta el padding en la carga ahora no hace falta
 
     char nombre_archivo_nuevo[TAM_RUTA];
 
@@ -92,15 +87,12 @@ int pixelEspVert(char* argv[], int pos)
     }
 
 
-    //Creamos el archivo nuevo para cargar la matriz modificada
-
     if(ImagenGuardar(&img, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&img);
         return ERR_EJECUCION;
     }
 
-    //Liberamos la memoria de la matriz
     ImagenLiberar(&img);
 
     return OK;

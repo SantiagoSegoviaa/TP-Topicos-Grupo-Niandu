@@ -14,7 +14,7 @@ int pixelRotarIzquierda (char* argv[], int pos)
         return cod;
     }
 
-    if(ImagenCrear( &original, &rotar, original.metadata.ancho, original.metadata.alto) != 0)
+    if(ImagenCrear( &original, &rotar, original.metadata.ancho, original.metadata.alto) != OK)
     {
         ImagenLiberar(&original);
         return ERR_MEMORIA;
@@ -41,7 +41,7 @@ int pixelRotarIzquierda (char* argv[], int pos)
         return ERR_EJECUCION;
     }
 
-    if(ImagenGuardar(&rotar, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&rotar, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&rotar);
         ImagenLiberar(&original);
@@ -64,9 +64,6 @@ int pixelEspHoriz(char* argv[], int pos)
         return cod;
     }
 
-    //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
-    //DONDE Y ES LA FILA Y X ES LA COLUMNA
-
     //Invertimos los pixeles.
 
     for(int y = 0; y < abs(img.metadata.alto); y++)
@@ -84,8 +81,6 @@ int pixelEspHoriz(char* argv[], int pos)
     }
 
 
-    //Como tuvimos en cuenta el padding en la carga ahora no hace falta
-
     char nombre_archivo_nuevo[TAM_RUTA];
 
     if(GeneraRuta(argv[pos], "espejar-horizontal_", nombre_archivo_nuevo) != OK)
@@ -95,15 +90,12 @@ int pixelEspHoriz(char* argv[], int pos)
     }
 
 
-    //Creamos el archivo nuevo para cargar la matriz modificada
-
     if(ImagenGuardar(&img, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&img);
         return ERR_EJECUCION;
     }
 
-    //Liberamos la memoria de la matriz
     ImagenLiberar(&img);
 
     return OK;

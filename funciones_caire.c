@@ -50,7 +50,7 @@ int pixelAchicar(char *argv[], int valor, int pos)
         return ERR_EJECUCION;
     }
 
-    if(ImagenGuardar(&imgNueva, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&imgNueva, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&imgNueva);
         ImagenLiberar(&imgOriginal);
@@ -83,9 +83,6 @@ int pixelRecortar(char *argv[], int valor, int pos)
     }
     memcpy(imgRecorte.metadata.encabezado, img.metadata.encabezado, img.metadata.tamEncabezado);
     imgRecorte.metadata.tamEncabezado = img.metadata.tamEncabezado;
-
-    //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
-    //DONDE Y ES LA FILA Y X ES LA COLUMNA
 
     //Calcular nuevo alto y ancho de la foto recortada
     imgRecorte.metadata.ancho = img.metadata.ancho * valor / 100;
@@ -137,8 +134,6 @@ int pixelRecortar(char *argv[], int valor, int pos)
         }
     }
 
-    //Como tuvimos en cuenta el padding en la carga ahora no hace falta
-
     char nombre_archivo_nuevo[TAM_RUTA];
 
     if(GeneraRuta(argv[pos], "recortar_", nombre_archivo_nuevo) != OK)
@@ -148,9 +143,7 @@ int pixelRecortar(char *argv[], int valor, int pos)
         return ERR_EJECUCION;
     }
 
-    //Creamos el archivo nuevo para cargar la matriz modificada
-
-    if(ImagenGuardar(&imgRecorte, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&imgRecorte, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&imgRecorte);
         ImagenLiberar(&img);
@@ -158,7 +151,6 @@ int pixelRecortar(char *argv[], int valor, int pos)
     }
 
 
-    //Liberamos la memoria de la matriz
     ImagenLiberar(&img);
     ImagenLiberar(&imgRecorte);
 

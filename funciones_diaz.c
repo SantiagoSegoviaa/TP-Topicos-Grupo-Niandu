@@ -28,8 +28,6 @@ int pixelMasContrast(char *argv[], int valor, int pos)
         }
     }
 
-    //Como tuvimos en cuenta el padding en la carga ahora no hace falta
-
     char nombre_archivo_nuevo[TAM_RUTA];
 
     if(GeneraRuta(argv[pos], "aumentar-contraste_", nombre_archivo_nuevo) != OK)
@@ -41,7 +39,7 @@ int pixelMasContrast(char *argv[], int valor, int pos)
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
-    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&img);
         return ERR_EJECUCION;
@@ -63,9 +61,6 @@ int pixelMenosContrast(char* argv[], int valor, int pos)
         return cod;
     }
 
-    //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
-    //DONDE Y ES LA FILA Y X ES LA COLUMNA
-
     //El calculo del aumento del contraste viene de un factor de escalado F que a su vez proviene de la variable de contraste C
 
     double var_contraste = -(valor * 255)/100;
@@ -81,8 +76,6 @@ int pixelMenosContrast(char* argv[], int valor, int pos)
         }
     }
 
-    //Como tuvimos en cuenta el padding en la carga ahora no hace falta
-
     char nombre_archivo_nuevo[TAM_RUTA];
 
     if(GeneraRuta(argv[pos], "reducir-contraste_", nombre_archivo_nuevo) != OK)
@@ -91,16 +84,12 @@ int pixelMenosContrast(char* argv[], int valor, int pos)
         return ERR_EJECUCION;
     }
 
-    //Creamos el archivo nuevo para cargar la matriz modificada
-
-    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&img);
         return ERR_EJECUCION;
     }
 
-
-    //Liberamos la memoria de la matriz
 
     ImagenLiberar(&img);
 

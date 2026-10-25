@@ -3,7 +3,7 @@
 int ImagenCargar(t_imagen *img, const char *nombre)
 {
     FILE *archivo;
-
+    
     img->metadata.encabezado = NULL;
     img->pixeles = NULL;
     img->metadata.alto = 0;
@@ -112,7 +112,17 @@ int ImagenCargar(t_imagen *img, const char *nombre)
         }
     }
 
-    //CERRAMOS EL ARCHIVO
+    //si el alto es negativo se da vuelta la imagen para que las funciones puedan trabajar con la matriz de manera mas simple
+    if(img->metadata.alto < 0)
+    {
+        for(int y = 0; y < filas / 2; y++)
+        {
+            t_pixel *aux = img->pixeles[y];
+            img->pixeles[y] = img->pixeles[filas - 1 - y];
+            img->pixeles[filas - 1 - y] = aux;
+        }
+        img->metadata.alto = filas;
+    }
     fclose(archivo);
 
     return OK;
@@ -188,7 +198,7 @@ int ImagenGuardar(t_imagen *img, const char *nombre)
 
     printf("Se creo el archivo %s correctamente.\n", nombre);
 
-    return 0;
+    return OK;
 }
 
 int ImagenCrear(const t_imagen* imgOrigen, t_imagen* imgDestino, int alto, int ancho)

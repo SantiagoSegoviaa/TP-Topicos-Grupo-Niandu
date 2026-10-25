@@ -305,7 +305,7 @@ int esModificacion(char *argv[], int pos, t_funcion_encontrada *func)
         }
     }
 
-    //Verificar si es una funcion que necesita dos imagenes -- TO DO
+    //Verificar si es una funcion que necesita dos imagenes
     fin_dobl = func_dobl + cant_dobl;
     for(ptr_dobl = func_dobl; ptr_dobl < fin_dobl; ptr_dobl++)
     {

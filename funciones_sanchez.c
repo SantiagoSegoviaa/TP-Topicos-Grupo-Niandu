@@ -39,7 +39,7 @@ int pixelConcatenarHoriz(char *argv[], int pos1, int pos2)
     int anchoTotal = ancho1 + ancho2;
     int altoFinal = (img1.metadata.alto > 0) ? altoMax : -altoMax;
 
-    if(ImagenCrear(&img1, &nueva, altoFinal, anchoTotal) != 0)
+    if(ImagenCrear(&img1, &nueva, altoFinal, anchoTotal) != OK)
     {
         ImagenLiberar(&img1);
         ImagenLiberar(&img2);
@@ -71,7 +71,7 @@ int pixelConcatenarHoriz(char *argv[], int pos1, int pos2)
 
     if(GeneraRuta(argv[pos1], "concatenar-horizontal_", nombre_archivo_nuevo) != OK)
         resultado = ERR_EJECUCION;
-    else if(ImagenGuardar(&nueva, nombre_archivo_nuevo) != 0)
+    else if(ImagenGuardar(&nueva, nombre_archivo_nuevo) != OK)
         resultado = ERR_EJECUCION;
 
     ImagenLiberar(&nueva);
@@ -91,9 +91,6 @@ int pixelTonAzul(char *argv[], int valor, int pos)
         return cod;
     }
 
-    //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
-    //DONDE Y ES LA FILA Y X ES LA COLUMNA
-
     //Para aumentar la intensidad de un color se aplica un factor M > 1.0 unicamente al canal que deseemos y dejamos los otros intactos.
 
     double m = 1 + (valor/100.0);
@@ -111,8 +108,6 @@ int pixelTonAzul(char *argv[], int valor, int pos)
         }
     }
 
-    //Como tuvimos en cuenta el padding en la carga ahora no hace falta
-
     char nombre_archivo_nuevo[TAM_RUTA];
 
     if(GeneraRuta(argv[pos], "tonalidad-azul_", nombre_archivo_nuevo) != OK)
@@ -121,15 +116,12 @@ int pixelTonAzul(char *argv[], int valor, int pos)
         return ERR_EJECUCION;
     }
 
-    //Creamos el archivo nuevo para cargar la matriz modificada
-
-    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&img);
         return ERR_EJECUCION;
     }
 
-    //Liberamos la memoria de la matriz
     ImagenLiberar(&img);
 
     return OK;

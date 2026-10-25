@@ -1,56 +1,5 @@
 #include "funciones_diaz.h"
 
-int pixelNegativo(char *argv[], int pos)
-{
-    t_imagen img;
-
-    int cod = ImagenCargar(&img, argv[pos]); //Devuelve 0 si cargo la imagen correctamente, sino devuelve cualquier otro numero.
-    if(cod != OK)
-    {
-        return cod;
-    }
-
-    //ACCESO SIMPLE A CUALQUIER PIXEL: imagen[y][x]
-    //DONDE Y ES LA FILA Y X ES LA COLUMNA
-
-    //Cambiamos los pixeles a sus opuestos para crear el negativo
-
-    for(int y = 0; y < abs(img.metadata.alto); y++)
-    {
-        for(int x = 0; x < img.metadata.ancho; x++)
-        {
-            //Para invertir los valores rgb hay que hacer: valor_invertido = 255 - valor
-
-            img.pixeles[y][x].r = 255 - img.pixeles[y][x].r;
-            img.pixeles[y][x].g = 255 - img.pixeles[y][x].g;
-            img.pixeles[y][x].b = 255 - img.pixeles[y][x].b;
-        }
-    }
-
-    //Como tuvimos en cuenta el padding en la carga ahora no hace falta
-
-
-    //Creamos un nombre nuevo para el archivo
-    char nombre_archivo_nuevo[TAM_RUTA];
-    if(GeneraRuta(argv[pos], "negativo_", nombre_archivo_nuevo) != OK)
-    {
-        ImagenLiberar(&img);
-        return ERR_EJECUCION;
-    }
-
-    //Cargamos la matriz a un archivo nuevo.
-    if(ImagenGuardar(&img,nombre_archivo_nuevo) != 0)//Devuelve 0 si guarda correctamente la imagen, sino devuelve otro valor
-    {
-        ImagenLiberar(&img);
-        return ERR_EJECUCION;
-    }
-
-    //Liberamos la memoria de la matriz
-    ImagenLiberar(&img);
-
-
-    return OK;
-}
 
 int pixelGrises(char *argv[], int pos)
 {
@@ -97,7 +46,7 @@ int pixelGrises(char *argv[], int pos)
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
-    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&img);
         return ERR_EJECUCION;
@@ -152,7 +101,7 @@ int pixelEspHoriz(char* argv[], int pos)
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
-    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&img);
         return ERR_EJECUCION;
@@ -206,7 +155,7 @@ int pixelEspVert(char* argv[], int pos)
 
     //Creamos el archivo nuevo para cargar la matriz modificada
 
-    if(ImagenGuardar(&img, nombre_archivo_nuevo) != 0)
+    if(ImagenGuardar(&img, nombre_archivo_nuevo) != OK)
     {
         ImagenLiberar(&img);
         return ERR_EJECUCION;

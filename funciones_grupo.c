@@ -1,6 +1,4 @@
 /*
-    Integrantes del grupo. En caso de ser un grupo de dos integrantes, no completar el último campo.
-    Si alguno de los integrantes del grupo dejara la materia, completar de todos modos sus datos, aclarando que no entrega.
     -----------------
     Apellido: Segovia
     Nombre: Santiago Ezequiel
@@ -19,7 +17,7 @@
     -----------------
 	Apellido: Lara
     Nombre: Tomas Vladimir
-    DNI: 45 612 200
+    DNI: 45612200
     Entrega: Si
     -----------------
     Apellido: Gramajo
@@ -27,30 +25,30 @@
     DNI: 45689186
     Entrega: Si
     -----------------
-    Apellido:Sanchez   
-    Nombre:Juan Manuel
-    DNI:45007095
+    Apellido: Sanchez   
+    Nombre: Juan Manuel
+    DNI: 45007095
     Entrega:Si
     -----------------
-    Apellido:
-    Nombre:
-    DNI:
-    Entrega:
+    Apellido: Salazar
+    Nombre: Pablo Hernan
+    DNI: 39273283
+    Entrega: Si
     -----------------
-    Apellido:
-    Nombre:
-    DNI:
-    Entrega:
+    Apellido: Caire 
+    Nombre: Fabrizio Esteban
+    DNI: 43863061
+    Entrega: Si
     -----------------
-    Apellido:
-    Nombre:
-    DNI:
-    Entrega:
+    Apellido: Gamba
+    Nombre: Agustin
+    DNI: 44824752
+    Entrega: No
     -----------------
-    Apellido:
-    Nombre:
-    DNI:
-    Entrega:
+    Apellido: Molina
+    Nombre: Martin Dario
+    DNI: 42014240
+    Entrega: No
     -----------------
 */
 

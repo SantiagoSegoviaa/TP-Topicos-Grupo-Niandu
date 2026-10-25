@@ -3,5 +3,6 @@
 
 #include "compartido.h"
 
+int pixelNegativo(char *argv[], int pos);
 
 #endif // FUNCIONES_SEGOVIA_H_INCLUDED

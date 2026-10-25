@@ -36,6 +36,10 @@
 		</Unit>
 		<Unit filename="compartido.h" />
 		<Unit filename="estructuras.h" />
+		<Unit filename="funciones_caire.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="funciones_caire.h" />
 		<Unit filename="funciones_diaz.c">
 			<Option compilerVar="CC" />
 		</Unit>

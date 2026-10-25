@@ -248,7 +248,8 @@ int esModificacion(char *argv[], int pos, t_funcion_encontrada *func)
     {"--tonalidad-azul=",pixelTonAzul},
     {"--tonalidad-verde=",pixelTonVerde},
     {"--tonalidad-roja=",pixelTonRojo},
-    {"--recortar=",pixelRecortar}
+    {"--recortar=",pixelRecortar},
+    {"--achicar=",pixelAchicar}
     };
 
     const t_modif_dobl *ptr_dobl;

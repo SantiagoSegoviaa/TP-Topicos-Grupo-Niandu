@@ -11,6 +11,7 @@
 #include "funciones_gramajo.h"
 #include "funciones_sanchez.h"
 #include "funciones_salazar.h"
+#include "funciones_caire.h"
 #include "compartido.h"
 #include "estructuras.h"
 

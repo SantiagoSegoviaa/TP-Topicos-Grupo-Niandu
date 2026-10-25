@@ -1,6 +1,5 @@
 #include "funciones_diaz.h"
 
-
 int pixelGrises(char *argv[], int pos)
 {
     t_imagen img;
@@ -22,10 +21,7 @@ int pixelGrises(char *argv[], int pos)
     {
         for(int x = 0; x < img.metadata.ancho; x++)
         {
-            //Como el ojo humano es mas sensible al verde que al rojo o azul, usamos el metodo de luminosidad.
-            //Gris = (0.299*R) + (0.587*G) + (0.114*B)
-
-            gris = (0.299*img.pixeles[y][x].r) + (0.587*img.pixeles[y][x].g) + (0.114*img.pixeles[y][x].b);
+            gris = ((img.pixeles[y][x].r) + (img.pixeles[y][x].g) + (img.pixeles[y][x].b)) / 3;
 
             img.pixeles[y][x].r = gris;
             img.pixeles[y][x].g = gris;
